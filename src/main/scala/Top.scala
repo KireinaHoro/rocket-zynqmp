@@ -15,28 +15,30 @@ class RocketChip(implicit val p: Parameters) extends Module {
 
   require(target.mem_axi4.size == 1)
   require(target.mmio_axi4.size == 1)
+  require(target.debug.head.systemjtag.size == 1)
+
+  val memBundle = target.mem_axi4.head
+  val mmioBundle = target.mmio_axi4.head
+  val jtagBundle = target.debug.head.systemjtag.head
 
   val io = IO(new Bundle {
-    val interrupts = Input(UInt(3.W))
-    val mem_axi4 = target.mem_axi4.head.cloneType
-    val mmio_axi4 = target.mmio_axi4.head.cloneType
+    val interrupts = Input(UInt(7.W))
+    val mem_axi4 = memBundle.cloneType
+    val mmio_axi4 = mmioBundle.cloneType
+    val jtag = Flipped(jtagBundle.jtag.cloneType)
   })
 
-  io.mem_axi4 <> target.mem_axi4.head
-  io.mmio_axi4 <> target.mmio_axi4.head
+  io.mem_axi4 <> memBundle
+  io.mmio_axi4 <> mmioBundle
+
+  io.jtag <> jtagBundle.jtag
+  jtagBundle.reset := reset
+  jtagBundle.mfr_id := 0x489.U(11.W)
+  jtagBundle.part_number := 0.U(16.W)
+  jtagBundle.version := 2.U(4.W)
 
   target.interrupts := io.interrupts
-  target.debug.map { debug =>
-    debug.clockeddmi.map { clockeddmi =>
-      clockeddmi.dmiReset := reset
-      clockeddmi.dmiClock := clock
-      clockeddmi.dmi.req.valid := false.B
-      clockeddmi.dmi.req.bits.op := 0.U
-      clockeddmi.dmi.req.bits.addr := 0.U
-      clockeddmi.dmi.req.bits.data := 0.U
-      clockeddmi.dmi.resp.ready := false.B
-    }
-  }
+
   target.dontTouchPorts()
 }
 

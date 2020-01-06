@@ -21,9 +21,11 @@ class WithMemMMIO extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
     master = x.master.copy(idBits = 6, base = 0x800000000L, size = 0x80000000L)))
   case ExtBus => up(ExtBus, site).map(x => x.copy(idBits = 6))
-  case NExtTopInterrupts => 3
+  case NExtTopInterrupts => 7  // Ethernet, DMA MM2S, DMA S2MM, Timer, UART, IIC, SPI (SD card)
 })
 
 class MyConfig extends Config(
-  new WithMemMMIO ++ new WithBootROM ++ new WithNBigCores(4) ++ new DefaultConfig)
+  new WithMemMMIO ++ new WithBootROM ++
+  new WithNBigCores(4) ++ new WithJtagDTM ++
+  new DefaultConfig)
 class ZCU102Config extends Config(new WithoutTLMonitors ++ new MyConfig)

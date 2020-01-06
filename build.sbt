@@ -6,5 +6,5 @@ lazy val root = (project in file("."))
     scalaVersion := "2.12.10",
     parallelExecution := false,
     traceLevel := 15,
-    scalacOptions := Seq("-unchecked", "-deprecation", "-Xsource:2.11")
+    scalacOptions := Seq("-unchecked", "-deprecation", "-Xsource:2.11", "-feature", "-language:reflectiveCalls")
   )
