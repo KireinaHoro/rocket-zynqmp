@@ -4,6 +4,9 @@ SECTIONS
 
     . = ROM_BASE;
     .text.start : { *(.text.start) }
-    . = ROM_BASE + 0x40;
-    .text.hang : { *(.text.hang) }
+    .text       : { *(.text) }
+    .rodata     : { *(.rodata) }
+    .sdata      : { *(.sdata) }
+
+    .rodata.dtb : { *(.rodata.dtb) }
 }

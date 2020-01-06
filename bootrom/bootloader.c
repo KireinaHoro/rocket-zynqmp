@@ -1,94 +1,71 @@
 #include <stdint.h>
-#include <stdlib.h>
+#include <stdbool.h>
+#include <stddef.h>
 
-#define UART_BASE 0x60400000
+#include "myprintf.h"
+#include "bits.h"
+#include "diskio.h"
+#include "ff.h"
+#include "uart.h"
+#include "elf.h"
+#include "memory.h"
+#include "spi.h"
+
+FATFS fat_fs;
+
 #define DDR_BASE 0x800000000
-volatile uint8_t *UART_RBR = (uint8_t *)(UART_BASE + 0x1000);
-volatile uint8_t *UART_THR = (uint8_t *)(UART_BASE + 0x1000);
-volatile uint8_t *UART_DLL = (uint8_t *)(UART_BASE + 0x1000); // LCR(7)=1
-volatile uint8_t *UART_IER = (uint8_t *)(UART_BASE + 0x1004);
-volatile uint8_t *UART_DLM = (uint8_t *)(UART_BASE + 0x1004); // LCR(7)=1
-volatile uint8_t *UART_FCR = (uint8_t *)(UART_BASE + 0x1008);
-volatile uint8_t *UART_LCR = (uint8_t *)(UART_BASE + 0x100C);
-volatile uint8_t *UART_MCR = (uint8_t *)(UART_BASE + 0x1010);
-volatile uint8_t *UART_LSR = (uint8_t *)(UART_BASE + 0x1014);
+#define DDR_SIZE 0x80000000
+#define SD_READ_SIZE 4096
 
-void init_serial() { 
-  // Enable 8 bytes FIFO
-  *UART_FCR = 0x81;
-  // LCR(7) = 1
-  *UART_LCR = 0x80;
-  // 115200: 50M / 16 / 115200 = 27
-  *UART_DLL = 27;
-  *UART_DLM = 0;
-  // LCR(7) = 0, 8N1
-  *UART_LCR = ~0x80 & 0x03;
-  *UART_MCR = 0;
-  *UART_IER = 0;
-}
+volatile uint8_t *mark = (uint8_t *)(DDR_BASE + DDR_SIZE - sizeof(uint8_t));
 
-void putc(char ch) {
-  while (!(*UART_LSR & 0x40))
-    ;
-  *UART_THR = ch;
-}
-
-uint8_t getc() {
-  while (!(*UART_LSR & 0x1))
-    ;
-  return *UART_RBR;
-}
-
-uint32_t getlen() {
-  uint32_t len = 0;
-  len |= getc();
-  len = len << 8;
-  len |= getc();
-  len = len << 8;
-  len |= getc();
-  len = len << 8;
-  len |= getc();
-  return len;
-}
-
-void puts(char *s) {
-  while (*s) {
-    putc(*s++);
-  }
-}
-
-void puthex(uint32_t num) {
-  int i, temp;
-  for (i = 7; i >= 0; i--) {
-    temp = (num >> (i * 4)) & 0xF;
-    if (temp <= 10) {
-      putc('0' + temp);
-    } else if (temp < 16) {
-      putc('A' + temp - 10);
-    } else {
-      putc('.');
+void bootloader(int hartid, void *dtb) {
+  uint8_t *load_location = (uint8_t *)(DDR_BASE);
+  if (hartid == 0) {
+    FIL fil;
+    uart_init();
+    printf("Init on hart 0\r\n", 0);
+    printf("BootROM DTB at %p\r\n", (uint64_t)dtb);
+    printf("Mounting FAT on SPI SD...\r\n", 0);
+    if (f_mount(&fat_fs, "", 1)) {
+      printf("!!! Failed to mount FAT filesystem\r\n", 0);
+      while (true)
+        ;
     }
+    printf("Loading BOOT.BIN to %p...", (uint64_t)load_location);
+    if (f_open(&fil, "BOOT.BIN", FA_READ)) {
+      printf("!!! Failed to open BOOT.BIN\r\n", 0);
+      while (true)
+        ;
+    }
+    uint32_t fsize = 0;
+    uint32_t br;
+    FRESULT fr;
+    uint8_t *buf = load_location;
+    do {
+      fr = f_read(&fil, buf, SD_READ_SIZE, &br);
+      buf += br;
+      fsize += br;
+    } while (!(fr || br == 0));
+    printf("loaded %d bytes.\r\n", fsize);
+    if (f_close(&fil)) {
+      printf("!!! Failed to close BOOT.BIN\r\n", 0);
+      while (true)
+        ;
+    }
+    if (f_mount(NULL, "", 1)) {
+      printf("!!! Failed to umount FAT filesystem\r\n", 0);
+      while (true)
+        ;
+    }
+    printf("Branching all harts to %p...", (uint64_t)load_location);
+    __sync_synchronize();
+    *mark = 1;
+  } else {
+    while (*mark != 1)
+      ;
+    __sync_synchronize();
   }
-}
 
-void bootloader() {
-  init_serial();
-  puts("NO BOOT FAIL\r\n");
-  uint32_t len = getlen();
-  puts("LEN ");
-  puthex(len);
-  puts("\r\n");
-  volatile uint8_t *MEM = (uint8_t *)DDR_BASE;
-  for (uint32_t i = 0; i < len; i++) {
-    *MEM = getc();
-    MEM++;
-  }
-  puts("BOOT\r\n");
-  void (*boot)() = (void(*)())DDR_BASE;
-  boot();
-}
-
-void halt(uint32_t epc) {
-  puts("HALT ");
-  puthex(epc);
+  ((void (*)(int, void *))load_location)(hartid, dtb);
 }

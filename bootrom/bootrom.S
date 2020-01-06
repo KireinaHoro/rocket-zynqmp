@@ -1,35 +1,21 @@
-#define DRAM_TOP 0x880000000
+// reserve place for bootloader sync mark and stay aligned
+#define DRAM_TOP 0x87ffffff0
 
 .section .text.start, "ax", @progbits
 .globl _start
 _start:
   li a1, 0x2000000 // base address of clint
-  csrr a0, mhartid
-  bnez a0, boot_core
+  csrr a0, mhartid   // hart 0 continues to setup interrupt
+  bnez a0, boot_core // everyone else wait
 
-  addi a2, a1, 4
+  addi a2, a1, 4   // 0x20000004 hart 0 msip
   li a3, 1
 interrupt_loop:
-  sw a3, 0(a2)
+  sw a3, 0(a2)     // enable interrupt
   addi a2, a2, 4
   lw a3, -4(a2)
-  bnez a3, interrupt_loop
+  bnez a3, interrupt_loop  // was that the last core?
   j boot_core_hart0
-
-.section .text.hang, "ax", @progbits
-.globl _hang
-_hang:
-  // This boot ROM doesn't know about any boot devices, so it just spins,
-  // waiting for the serial interface to load the program and interrupt it
-  la a0, _start
-  csrw mtvec, a0
-  li a0, 8 // MIE or MSIP bit
-  csrw mie, a0 // set only MSIP in mie CSR
-  csrw mideleg, zero // no delegation
-  csrs mstatus, a0 // set MIE in mstatus CSR
-wfi_loop:
-  wfi
-  j wfi_loop
 
 boot_core:
   lw t0, 0(a1) // load hart 0 msip
@@ -37,14 +23,18 @@ boot_core:
   sll a0, a0, 2 // offset for hart msip
   add a1, a0, a1
 boot_core_hart0:
-  sw zero, 0(a1) // clear the interrupt
-  li sp, DRAM_TOP // setup stack
-  la a0, bootloader // program reset vector
-  csrw mepc, a0 // return from interrupt to start of user program
-  csrr a0, mhartid // hartid for next level bootloader
-  la a1, _dtb // dtb address for next level bootloader
-  li a2, 0x80 // set mstatus MPIE to 0
-  csrc mstatus, a2
-  mret
+  sw zero, 0(a1)     // clear the interrupt
+  csrr a0, mhartid   // hartid for next level bootloader
+  li sp, DRAM_TOP    // setup stack
+  mv t0, a0
+  slli t0, t0, 12    // 4K stack for each hart
+  sub sp, sp, t0
+  la a1, _dtb        // dtb address for next level bootloader
+  li t0, 0x87fffffff // address for MARK in bootloader.c
+  sb zero, 0(t0)
+  jal bootloader
 
+.section .rodata.dtb, "a", @progbits
+.globl _dtb
+.align 5, 0
 _dtb:
