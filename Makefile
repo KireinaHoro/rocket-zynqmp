@@ -7,6 +7,8 @@ CONFIG ?= ZCU102Config
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build
 SRC = $(BASE_DIR)/src
+IP = $(BASE_DIR)/vivado/ip/rocket
+OUT_VERILOG = $(IP)/$(TOP_MODULE_PROJECT).$(CONFIG).v
 ROCKETCHIP_STAMP = $(BASE_DIR)/lib/rocketchip.stamp
 
 SHELL := /bin/bash
@@ -16,7 +18,7 @@ SBT ?= java -Xmx2G -Xss8M -jar $(ROCKET_DIR)/sbt-launch.jar
 FIRRTL_JAR ?= $(ROCKET_DIR)/firrtl/utils/bin/firrtl.jar
 FIRRTL ?= java -Xmx2G -Xss8M -cp $(FIRRTL_JAR) firrtl.stage.FirrtlMain
 
-all: $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).v
+all: $(OUT_VERILOG)
 
 $(FIRRTL_JAR): $(shell find $(ROCKET_DIR)/firrtl/src/main/scala -iname "*.scala" 2> /dev/null)
 	$(MAKE) -C $(ROCKET_DIR)/firrtl SBT="$(SBT)" root_dir=$(ROCKET_DIR)/firrtl build-scala
@@ -36,12 +38,11 @@ $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(ROCKETCHIP_STAMP) $(call LOOKUP_
 	mkdir -p $(@D)
 	$(SBT) "runMain freechips.rocketchip.system.Generator $(CHISEL_ARGS) $(TOP_MODULE_PROJECT) $(TOP_MODULE) $(TOP_MODULE_PROJECT) $(CONFIG)"
 
-$(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).v: $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir $(FIRRTL_JAR)
+$(OUT_VERILOG): $(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir $(FIRRTL_JAR)
 	$(FIRRTL) -i $< -o $@ -X verilog
-	cp $@ $@.bak
-	sed 's/wire \[63:0\] coreMonitorBundle/(* mark_debug="true" *) \0/g' $@.bak > $@
 
 clean:
 	rm -rf build/*
+	rm $(OUT_VERILOG) -f
 
 .PHONY:  all clean
