@@ -39,7 +39,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
 
   target.interrupts := io.interrupts
 
-  target.dontTouchPorts()
+  target.dontTouchPorts
 }
 
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
