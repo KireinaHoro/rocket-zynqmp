@@ -10,7 +10,6 @@ SRC = $(BASE_DIR)/src
 BOOTROM = $(BASE_DIR)/bootrom
 IP = $(BASE_DIR)/vivado/ip/rocket
 OUT_VERILOG = $(IP)/$(TOP_MODULE_PROJECT).$(CONFIG).v
-ROCKETCHIP_STAMP = $(BASE_DIR)/lib/rocketchip.stamp
 
 SHELL := /bin/bash
 
@@ -26,19 +25,14 @@ $(FIRRTL_JAR): $(shell find $(ROCKET_DIR)/firrtl/src/main/scala -iname "*.scala"
 
 CHISEL_ARGS := $(BUILD)
 
-LOOKUP_SCALA_SRCS = $(shell find $(1)/. -iname "*.scala" 2> /dev/null)
+LOOKUP_SCALA_SRCS = $(shell find $(1)/. -iname "*.scala" 2>/dev/null)
 BOOTROM_IMG := $(BOOTROM)/bootrom.rv64.img
 
-$(BOOTROM_IMG): $(BOOTROM) $(shell find $(BOOTROM))
+.PHONY: $(BOOTROM_IMG)
+$(BOOTROM_IMG):
 	$(MAKE) -C $(BOOTROM)
 
-$(ROCKETCHIP_STAMP): $(call LOOKUP_SCALA_SRCS, $(ROCKET_DIR)) $(FIRRTL_JAR)
-	cd $(ROCKET_DIR) && $(SBT) pack
-	mkdir -p $(BASE_DIR)/lib
-	cp $(ROCKET_DIR)/target/pack/lib/* $(BASE_DIR)/lib
-	touch $(ROCKETCHIP_STAMP)
-
-$(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(ROCKETCHIP_STAMP) $(call LOOKUP_SCALA_SRCS,$(SRC)) $(BOOTROM_IMG)
+$(BUILD)/$(TOP_MODULE_PROJECT).$(CONFIG).fir: $(call LOOKUP_SCALA_SRCS,$(SRC)) $(BOOTROM_IMG)
 	mkdir -p $(@D)
 	$(SBT) "runMain freechips.rocketchip.system.Generator $(CHISEL_ARGS) $(TOP_MODULE_PROJECT) $(TOP_MODULE) $(TOP_MODULE_PROJECT) $(CONFIG)"
 
