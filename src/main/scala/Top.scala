@@ -2,12 +2,11 @@ package zcu102
 
 import chisel3._
 
-import freechips.rocketchip.config.{Parameters, Field}
+import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy.{LazyModule, LazyModuleImp}
+import freechips.rocketchip.diplomacy.LazyModule
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
-import freechips.rocketchip.tile._
 
 class RocketChip(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
@@ -50,19 +49,19 @@ class RocketChip(implicit val p: Parameters) extends Module {
 }
 
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
-    with HasHierarchicalBusTopology
-    with HasPeripheryBootROM
-    with HasAsyncExtInterrupts
-    with CanHaveMasterAXI4MemPort
-    with CanHaveMasterAXI4MMIOPort {
+  with HasHierarchicalBusTopology
+  with HasPeripheryBootROM
+  with HasAsyncExtInterrupts
+  with CanHaveMasterAXI4MemPort
+  with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModuleImp(this)
 }
 
 class RocketTopModuleImp[+L <: RocketTop](_outer: L) extends RocketSubsystemModuleImp(_outer)
-    with HasRTCModuleImp
-    with HasExtInterruptsModuleImp
-    with HasPeripheryBootROMModuleImp
-    with DontTouch {
+  with HasRTCModuleImp
+  with HasExtInterruptsModuleImp
+  with HasPeripheryBootROMModuleImp
+  with DontTouch {
   lazy val mem_axi4 = _outer.mem_axi4
   lazy val mmio_axi4 = _outer.mmio_axi4
 }
