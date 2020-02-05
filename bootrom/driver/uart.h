@@ -3,8 +3,8 @@
 #ifndef UART_HEADER_H
 #define UART_HEADER_H
 
-#include <stdint.h>
 #include "mem_map.h"
+#include <stdint.h>
 
 #ifdef MEM_MAP_UART_BASE
 #define UART_BASE ((uint32_t)(MEM_MAP_UART_BASE | 0x1000))

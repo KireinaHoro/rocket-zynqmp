@@ -3,8 +3,8 @@
 #ifndef SPI_HEADER_H
 #define SPI_HEADER_H
 
-#include <stdint.h>
 #include "mem_map.h"
+#include <stdint.h>
 
 // Xilinx AXI_QUAD_SPI
 

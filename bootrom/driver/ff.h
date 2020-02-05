@@ -51,9 +51,9 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include "myprintf.h"
 #include "ffconf.h" /* FatFs configuration options */
+#include "myprintf.h"
+#include <stdint.h>
 #if _FATFS != _FFCONF
 #error Wrong configuration file (ffconf.h).
 #endif
@@ -136,8 +136,8 @@ typedef struct {
 /* File object structure (FIL) */
 
 typedef struct {
-  FATFS *fs; /* Pointer to the related file system object (**do not change
-                order**) */
+  FATFS *fs;       /* Pointer to the related file system object (**do not change
+                      order**) */
   uint16_t id;     /* Owner file system mount ID (**do not change order**) */
   uint8_t flag;    /* Status flags */
   uint8_t err;     /* Abort flag (error code) */
@@ -145,8 +145,8 @@ typedef struct {
   uint32_t fsize;  /* File size */
   uint32_t sclust; /* File start cluster (0:no cluster chain, always 0 when
                       fsize is 0) */
-  uint32_t clust; /* Current cluster of fpter (not valid when fprt is 0) */
-  uint32_t dsect; /* Sector number appearing in buf[] (0:invalid) */
+  uint32_t clust;  /* Current cluster of fpter (not valid when fprt is 0) */
+  uint32_t dsect;  /* Sector number appearing in buf[] (0:invalid) */
 #if !_FS_READONLY
   uint32_t dir_sect; /* Sector number containing the directory entry */
   uint8_t *dir_ptr;  /* Pointer to the directory entry in the win[] */
@@ -167,8 +167,8 @@ typedef struct {
 /* Directory object structure (DIR) */
 
 typedef struct {
-  FATFS *fs; /* Pointer to the owner file system object (**do not change
-                order**) */
+  FATFS *fs;       /* Pointer to the owner file system object (**do not change
+                      order**) */
   uint16_t id;     /* Owner file system mount ID (**do not change order**) */
   uint16_t index;  /* Current read/write index number */
   uint32_t sclust; /* Table start cluster (0:Root dir) */
@@ -222,8 +222,8 @@ typedef enum {
   FR_MKFS_ABORTED,    /* (14) The f_mkfs() aborted due to any parameter error */
   FR_TIMEOUT, /* (15) Could not get a grant to access the volume within defined
                  period */
-  FR_LOCKED, /* (16) The operation is rejected according to the file sharing
-                policy */
+  FR_LOCKED,  /* (16) The operation is rejected according to the file sharing
+                 policy */
   FR_NOT_ENOUGH_CORE,     /* (17) LFN working buffer could not be allocated */
   FR_TOO_MANY_OPEN_FILES, /* (18) Number of open files > _FS_LOCK */
   FR_INVALID_PARAMETER    /* (19) Given parameter is invalid */

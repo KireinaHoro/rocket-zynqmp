@@ -1,15 +1,15 @@
-#include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 
-#include "myprintf.h"
 #include "bits.h"
 #include "diskio.h"
-#include "ff.h"
-#include "uart.h"
 #include "elf.h"
+#include "ff.h"
 #include "memory.h"
+#include "myprintf.h"
 #include "spi.h"
+#include "uart.h"
 
 FATFS fat_fs;
 
@@ -24,17 +24,17 @@ void bootloader(int hartid, void *dtb) {
   if (hartid == 0) {
     FIL fil;
     uart_init();
-    printf("Init on hart 0\r\n", 0);
-    printf("BootROM DTB at %p\r\n", (uint64_t)dtb);
-    printf("Mounting FAT on SPI SD...\r\n", 0);
+    printf(">>> Init on hart 0\r\n", 0);
+    printf(">>> BootROM DTB at %p\r\n", (uint64_t)dtb);
+    printf(">>> Mounting FAT on SPI SD...\r\n", 0);
     if (f_mount(&fat_fs, "", 1)) {
       printf("!!! Failed to mount FAT filesystem\r\n", 0);
       while (true)
         ;
     }
-    printf("Loading BOOT.BIN to %p...", (uint64_t)load_location);
+    printf(">>> Loading BOOT.BIN to %p...", (uint64_t)load_location);
     if (f_open(&fil, "BOOT.BIN", FA_READ)) {
-      printf("!!! Failed to open BOOT.BIN\r\n", 0);
+      printf("\r\n!!! Failed to open BOOT.BIN\r\n", 0);
       while (true)
         ;
     }
@@ -58,7 +58,7 @@ void bootloader(int hartid, void *dtb) {
       while (true)
         ;
     }
-    printf("Branching all harts to %p...", (uint64_t)load_location);
+    printf(">>> Branching all harts to %p...\r\n", (uint64_t)load_location);
     __sync_synchronize();
     *mark = 1;
   } else {

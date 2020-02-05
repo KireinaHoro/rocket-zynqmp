@@ -1,16 +1,16 @@
+bootrom_elf = bootrom.rv64.elf
 bootrom_img = bootrom.rv64.img
 bootrom_dump = bootrom.rv64.dump
 
-GCC=riscv64-unknown-elf-gcc
-CFLAGS_RV64=-mabi=lp64 -march=rv64ima -nostdlib -ffreestanding -DDEBUG
-OBJCOPY=riscv64-unknown-elf-objcopy
-OBJDUMP=riscv64-unknown-elf-objdump
+TRIPLE=riscv64-linux-gnu-
+GCC=$(TRIPLE)gcc -g
+CFLAGS_RV64=-mabi=lp64 -march=rv64ima -nostdlib -ffreestanding -DDEBUG -mcmodel=medany -Wl,--build-id=none
+OBJCOPY=$(TRIPLE)objcopy
+OBJDUMP=$(TRIPLE)objdump
 
 .PHONY: all clean
 
-all: img
-
-img: $(bootrom_img)
+all: $(bootrom_img) $(bootrom_elf)
 
 dump: $(bootrom_dump)
 

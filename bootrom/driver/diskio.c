@@ -40,8 +40,8 @@
 /*------------------------------------------------------------------------*/
 
 #include "diskio.h"
-#include "spi.h"
 #include "myprintf.h"
+#include "spi.h"
 /*--------------------------------------------------------------------------
 
   Module Private Functions
@@ -96,7 +96,7 @@ static void power_off(void) { spi_disable(); }
 /* Exchange a byte */
 static uint8_t xchg_spi(            /* Returns received data */
                         uint8_t dat /* Data to be sent */
-                        ) {
+) {
   return spi_send(dat);
 }
 
@@ -104,7 +104,7 @@ static uint8_t xchg_spi(            /* Returns received data */
 static void
 xmit_spi_multi(const uint8_t *p, /* Data block to be sent */
                uint32_t cnt /* Size of data block (must be multiple of 2) */
-               ) {
+) {
   int i = 0;
   for (i = 0; i < cnt; i = i + 16) {
     if (cnt >= i + 16)
@@ -118,7 +118,7 @@ xmit_spi_multi(const uint8_t *p, /* Data block to be sent */
 static void
 rcvr_spi_multi(uint8_t *p,  /* Data buffer */
                uint32_t cnt /* Size of data block (must be multiple of 2) */
-               ) {
+) {
   int i = 0;
   for (i = 0; i < cnt; i = i + 16) {
     if (cnt >= i + 16)
@@ -134,7 +134,7 @@ rcvr_spi_multi(uint8_t *p,  /* Data buffer */
 
 static int wait_ready(            /* 1:Ready, 0:Timeout */
                       uint32_t wt /* Timeout [ms] */
-                      ) {
+) {
   uint8_t d;
   uint32_t timeout = wt * 5000;
 
@@ -173,7 +173,7 @@ static int select(void) /* 1:Successful, 0:Timeout */
 static int
 rcvr_datablock(uint8_t *buff, /* Data buffer to store received data */
                uint32_t btr   /* Byte count (must be multiple of 4) */
-               ) {
+) {
   uint8_t token;
 
   uint32_t timeout = 200 * 5000;
@@ -199,7 +199,7 @@ rcvr_datablock(uint8_t *buff, /* Data buffer to store received data */
 static int
 xmit_datablock(const uint8_t *buff, /* 512 byte data block to be transmitted */
                uint8_t token        /* Data/Stop token */
-               ) {
+) {
   uint8_t resp;
 
   if (!wait_ready(500))
@@ -229,7 +229,7 @@ xmit_datablock(const uint8_t *buff, /* 512 byte data block to be transmitted */
 static uint8_t send_cmd(             /* Returns R1 resp (bit7==1:Send failed) */
                         uint8_t cmd, /* Command index */
                         uint32_t arg /* Argument */
-                        ) {
+) {
   uint8_t n, res;
   uint32_t timeout = 100 * 1000;
 
@@ -257,7 +257,7 @@ static uint8_t send_cmd(             /* Returns R1 resp (bit7==1:Send failed) */
   printf("    - cmd %d is sending ... ", cmd);
 #endif
 #ifdef DEBUG
-  printf("Argument is %d ... ", arg );
+  printf("Argument is %d ... ", arg);
 #endif
   xchg_spi(0x40 | cmd);           /* Start + Command index */
   xchg_spi((uint8_t)(arg >> 24)); /* Argument[31..24] */
@@ -297,7 +297,7 @@ static uint8_t send_cmd(             /* Returns R1 resp (bit7==1:Send failed) */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize(uint8_t pdrv /* Physical drive nmuber (0) */
-                        ) {
+) {
   uint8_t n, cmd, ty, ocr[4];
   uint32_t timeout;
   uint32_t acmd_delay = 100 * 1000;
@@ -363,7 +363,7 @@ DSTATUS disk_initialize(uint8_t pdrv /* Physical drive nmuber (0) */
 
   } else { /* Initialization failed */
 #ifdef DEBUG
-           printf("[DISK_INIT]disk init failed ...\n\r", 0);
+    printf("[DISK_INIT]disk init failed ...\n\r", 0);
 #endif
   }
 
@@ -375,7 +375,7 @@ DSTATUS disk_initialize(uint8_t pdrv /* Physical drive nmuber (0) */
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status(uint8_t pdrv /* Physical drive nmuber (0) */
-                    ) {
+) {
   if (pdrv)
     return STA_NOINIT; /* Supports only single drive */
   return Stat;
@@ -390,7 +390,7 @@ disk_read(uint8_t pdrv,    /* Physical drive nmuber (0) */
           uint8_t *buff,   /* Pointer to the data buffer to store read data */
           uint32_t sector, /* Start sector number (LBA) */
           uint32_t count   /* Sector count (1..128) */
-          ) {
+) {
   uint8_t cmd;
 
   if (pdrv || !count)
@@ -416,7 +416,7 @@ disk_read(uint8_t pdrv,    /* Physical drive nmuber (0) */
         break;
       buff += 512;
 #ifdef DEBUG
-      printf("    - %d sectors left to be read\n\r", count-1);
+      printf("    - %d sectors left to be read\n\r", count - 1);
 #endif
 
     } while (--count);
@@ -440,7 +440,7 @@ DRESULT disk_write(uint8_t pdrv,        /* Physical drive nmuber (0) */
                    const uint8_t *buff, /* Pointer to the data to be written */
                    uint32_t sector,     /* Start sector number (LBA) */
                    uint32_t count       /* Sector count (1..128) */
-                   ) {
+) {
   if (pdrv || !count)
     return RES_PARERR;
   if (Stat & STA_NOINIT)
@@ -487,7 +487,7 @@ DRESULT disk_write(uint8_t pdrv,        /* Physical drive nmuber (0) */
 DRESULT disk_ioctl(uint8_t pdrv, /* Physical drive nmuber (0) */
                    uint8_t cmd,  /* Control code */
                    void *buff    /* Buffer to send/receive control data */
-                   ) {
+) {
   DRESULT res;
   uint8_t n, csd[16], *ptr = buff;
   uint32_t csize;
@@ -501,9 +501,8 @@ DRESULT disk_ioctl(uint8_t pdrv, /* Physical drive nmuber (0) */
     return RES_NOTRDY;
 
   switch (cmd) {
-  case CTRL_SYNC
-      : /* Make sure that no pending write process. Do not remove this or
-           written sector might not left updated. */
+  case CTRL_SYNC: /* Make sure that no pending write process. Do not remove this
+                     or written sector might not left updated. */
     if (select())
       res = RES_OK;
     break;
@@ -551,7 +550,7 @@ DRESULT disk_ioctl(uint8_t pdrv, /* Physical drive nmuber (0) */
     }
     break;
 
-  /* Following commands are never used by FatFs module */
+    /* Following commands are never used by FatFs module */
 
   case MMC_GET_TYPE: /* Get card type flags (1 byte) */
     *ptr = CardType;
