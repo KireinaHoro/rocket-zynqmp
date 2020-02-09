@@ -67,10 +67,10 @@ class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
       val negCounter = RegInit(0.U(8.W))
       negCounter := negCounter + 1.U
       tms := MuxLookup(negCounter, false.B, Array(
-        4.U -> tdiRegisterWire,
-        5.U -> true.B,
-        shiftCounterWire + 7.U -> true.B,
-        shiftCounterWire + 8.U -> true.B)
+        4.U + chainPos -> tdiRegisterWire,
+        5.U + chainPos -> true.B,
+        shiftCounterWire + 7.U + chainPos -> true.B,
+        shiftCounterWire + 8.U + chainPos -> true.B)
       )
     }
   }
