@@ -30,7 +30,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
   io.mmio_axi4 <> mmioBundle
 
   // connect JTAG
-  val boardJtag = Module(new BscanJTAG)
+  val boardJtag = Module(new BscanJTAG(1))
   // set JTAG parameters
   jtagBundle.reset := reset
   jtagBundle.mfr_id := 0x489.U(11.W)

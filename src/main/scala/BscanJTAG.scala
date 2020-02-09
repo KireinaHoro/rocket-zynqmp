@@ -24,7 +24,7 @@ class BSCANE2 extends ExtModule(Map("JTAG_CHAIN" -> 4)) {
   val UPDATE = IO(Output(Bool()))
 }
 
-class BscanJTAG extends MultiIOModule {
+class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
   val tck: Clock = IO(Output(Clock()))
   val tms: Bool = IO(Output(Bool()))
   val tdi: Bool = IO(Output(Bool()))
@@ -47,16 +47,17 @@ class BscanJTAG extends MultiIOModule {
    **/
   val tdiRegisterWire = Wire(Bool())
   val shiftCounterWire = Wire(UInt(7.W))
+  val chainPos = chainPosition.asUInt
   withReset(!bscane2.SHIFT) {
     withClock(posClock) {
       val shiftCounter = RegInit(0.U(7.W))
       val posCounter = RegInit(0.U(8.W))
       val tdiRegister = RegInit(false.B)
       posCounter := posCounter + 1.U
-      when(posCounter >= 1.U && posCounter <= 7.U) {
+      when(posCounter >= 1.U + chainPos && posCounter <= 7.U + chainPos) {
         shiftCounter := Cat(bscane2.TDI, shiftCounter.head(6))
       }
-      when(posCounter === 0.U) {
+      when(posCounter === chainPos) {
         tdiRegister := !bscane2.TDI
       }
       tdiRegisterWire := tdiRegister
@@ -66,10 +67,10 @@ class BscanJTAG extends MultiIOModule {
       val negCounter = RegInit(0.U(8.W))
       negCounter := negCounter + 1.U
       tms := MuxLookup(negCounter, false.B, Array(
-        4.U -> tdiRegisterWire,
-        5.U -> true.B,
-        shiftCounterWire + 7.U -> true.B,
-        shiftCounterWire + 8.U -> true.B)
+        4.U + chainPos -> tdiRegisterWire,
+        5.U + chainPos -> true.B,
+        shiftCounterWire + 7.U + chainPos -> true.B,
+        shiftCounterWire + 8.U + chainPos -> true.B)
       )
     }
   }
