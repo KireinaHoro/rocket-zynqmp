@@ -12,12 +12,12 @@ import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
 
 object Params {
-  val RAMBase = 0x800000000L // Hi-2G base on PS DIMM
-  val RAMSize = 0x80000000L // 2 GiB
+  val RAMBase = 0x80000000L // will be remapped through AXI Remap
+  val RAMSize = 0x40000000L // 1 GiB
   val NInterrupts = 7 // Ethernet, DMA MM2S, DMA S2MM, Timer, UART, IIC, SPI (SD card)
   val SystemFreq = 50000000L // 50 MHz
   val NBreakpoints = 8 // # Hardware breakpoints
-  val NCores = 2 // # Big cores
+  val NCores = 1 // # Big cores
 }
 
 class OverridingConfig extends Config((site, here, up) => {
