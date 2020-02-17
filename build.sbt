@@ -2,7 +2,7 @@ lazy val rocketChip = RootProject(file("rocket-chip/"))
 
 lazy val root = (project in file("."))
   .settings(
-    name := "zcu102",
+    name := "zynqmp",
     organization := "pku",
     version := "1.0",
     scalaVersion := "2.12.10",
