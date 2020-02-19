@@ -2,7 +2,7 @@ package zcu102
 
 import chisel3._
 import chisel3.util._
-import chisel3.experimental.ExtModule
+import chisel3.experimental.{ExtModule, chiselName}
 
 class BUFGCE extends ExtModule {
   val O = IO(Output(Bool()))
@@ -24,6 +24,7 @@ class BSCANE2 extends ExtModule(Map("JTAG_CHAIN" -> 4)) {
   val UPDATE = IO(Output(Bool()))
 }
 
+@chiselName
 class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
   val tck: Clock = IO(Output(Clock()))
   val tms: Bool = IO(Output(Bool()))
@@ -46,22 +47,27 @@ class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
    * generated at [[posClock]], used in [[negClock]]
    **/
   val tdiRegisterWire = Wire(Bool())
-  val shiftCounterWire = Wire(UInt(7.W))
-  val chainPos = chainPosition.asUInt
+  val payloadWidthWire = Wire(UInt(7.W))
+  val chainPos = chainPosition.asUInt(8.W)
   withReset(!bscane2.SHIFT) {
     withClock(posClock) {
-      val shiftCounter = RegInit(0.U(7.W))
-      val posCounter = RegInit(0.U(8.W))
-      val tdiRegister = RegInit(false.B)
+      // match tunnel payload (LSB)
+      // 00 1010000 xxxxx 000 (IR, 5 bit payload)
+      // 01 wwwwwww xxxx...xx 000 (DR, 0bwwwwwww bit payload)
+      val posCounter = RegInit(0.U(8.W)) // cycle counter
+      val payloadWidthCounter = RegInit(0.U(7.W))
+      val irOrDr = RegInit(false.B)
       posCounter := posCounter + 1.U
-      when(posCounter >= 1.U + chainPos && posCounter <= 7.U + chainPos) {
-        shiftCounter := Cat(bscane2.TDI, shiftCounter.head(6))
-      }
+      // capture IR or DR
       when(posCounter === chainPos) {
-        tdiRegister := !bscane2.TDI
+        irOrDr := !bscane2.TDI
       }
-      tdiRegisterWire := tdiRegister
-      shiftCounterWire := shiftCounter
+      // capture payload width
+      when(posCounter >= 1.U + chainPos && posCounter <= 7.U + chainPos) {
+        payloadWidthCounter := Cat(bscane2.TDI, payloadWidthCounter.head(6))
+      }
+      tdiRegisterWire := irOrDr
+      payloadWidthWire := payloadWidthCounter
     }
     withClock(negClock) {
       val negCounter = RegInit(0.U(8.W))
@@ -69,9 +75,14 @@ class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
       tms := MuxLookup(negCounter, false.B, Array(
         4.U + chainPos -> tdiRegisterWire,
         5.U + chainPos -> true.B,
-        shiftCounterWire + 7.U + chainPos -> true.B,
-        shiftCounterWire + 8.U + chainPos -> true.B)
+        payloadWidthWire + 7.U + chainPos -> true.B,
+        payloadWidthWire + 8.U + chainPos -> true.B)
       )
     }
   }
+}
+
+// helper for test generating verilog
+object BscanJTAG extends App {
+  Driver.execute(args, () => new BscanJTAG(1))
 }
