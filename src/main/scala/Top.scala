@@ -1,4 +1,4 @@
-package zcu102
+package zynqmp
 
 import chisel3._
 
@@ -8,7 +8,10 @@ import freechips.rocketchip.diplomacy.LazyModule
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
 
-class RocketChip(implicit val p: Parameters) extends Module {
+class EdgeBoardTop(implicit p: Parameters) extends BoardTop(EdgeBoardParams)
+class ZCU102Top(implicit p: Parameters) extends BoardTop(ZCU102Params)
+
+class BoardTop(params: Params)(implicit val p: Parameters) extends Module {
   val config = p(ExtIn)
   val target = Module(LazyModule(new RocketTop).module)
 
@@ -21,7 +24,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
   val jtagBundle = target.debug.head.systemjtag.head
 
   val io = IO(new Bundle {
-    val interrupts = Input(UInt(7.W))
+    val interrupts = Input(UInt(params.NInterrupts.W))
     val mem_axi4 = memBundle.cloneType
     val mmio_axi4 = mmioBundle.cloneType
   })
@@ -29,19 +32,19 @@ class RocketChip(implicit val p: Parameters) extends Module {
   io.mem_axi4 <> memBundle
   io.mmio_axi4 <> mmioBundle
 
-  // connect JTAG
-  val boardJtag = Module(new BscanJTAG(1))
+  // connect JTAG - PL TAP is at position 1
+  val boardJTAG = Module(new BscanJTAG(1))
   // set JTAG parameters
   jtagBundle.reset := reset
   jtagBundle.mfr_id := 0x489.U(11.W)
   jtagBundle.part_number := 0.U(16.W)
   jtagBundle.version := 2.U(4.W)
   // connect to BSCAN
-  jtagBundle.jtag.TCK := boardJtag.tck
-  jtagBundle.jtag.TMS := boardJtag.tms
-  jtagBundle.jtag.TDI := boardJtag.tdi
-  boardJtag.tdo := jtagBundle.jtag.TDO.data
-  boardJtag.tdoEnable := jtagBundle.jtag.TDO.driven
+  jtagBundle.jtag.TCK := boardJTAG.tck
+  jtagBundle.jtag.TMS := boardJTAG.tms
+  jtagBundle.jtag.TDI := boardJTAG.tdi
+  boardJTAG.tdo := jtagBundle.jtag.TDO.data
+  boardJTAG.tdoEnable := jtagBundle.jtag.TDO.driven
 
   target.interrupts := io.interrupts
 
@@ -51,6 +54,7 @@ class RocketChip(implicit val p: Parameters) extends Module {
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
   with HasHierarchicalBusTopology
   with HasPeripheryBootROM
+  with HasPeripheryBRAM
   with HasAsyncExtInterrupts
   with CanHaveMasterAXI4MemPort
   with CanHaveMasterAXI4MMIOPort {
@@ -61,6 +65,7 @@ class RocketTopModuleImp[+L <: RocketTop](_outer: L) extends RocketSubsystemModu
   with HasRTCModuleImp
   with HasExtInterruptsModuleImp
   with HasPeripheryBootROMModuleImp
+  with HasPeripheryBRAMModuleImp
   with DontTouch {
   lazy val mem_axi4 = _outer.mem_axi4
   lazy val mmio_axi4 = _outer.mmio_axi4

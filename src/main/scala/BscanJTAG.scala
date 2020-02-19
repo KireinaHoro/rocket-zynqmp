@@ -1,4 +1,4 @@
-package zcu102
+package zynqmp
 
 import chisel3._
 import chisel3.util._
