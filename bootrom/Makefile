@@ -53,4 +53,5 @@ $(sbi_elf_strip):
 	$(OBJDUMP) -D $< > $@
 
 clean:
+	rm -rf $(sbi_root)/build
 	rm -f $(bootrom_img) $(bootrom_dump) *.elf $(sbi_elf_strip) $(driver_objects) $(driver_library)
