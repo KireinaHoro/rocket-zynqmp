@@ -241,7 +241,7 @@ static uint8_t send_cmd(             /* Returns R1 resp (bit7==1:Send failed) */
   }
 
   // enforce a wait between CMD55 and CMD41
-  if (cmd == ACMD41 & 0x7F)
+  if (cmd == (ACMD41 & 0x7F))
     while (timeout--)
       ;
 
