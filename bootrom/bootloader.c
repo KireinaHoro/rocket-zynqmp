@@ -3,62 +3,51 @@
 #include <stdint.h>
 
 #include "bits.h"
-#include "diskio.h"
-#include "elf.h"
-#include "ff.h"
 #include "memory.h"
 #include "myprintf.h"
-#include "spi.h"
 #include "uart.h"
+#include "riscv.h"
+#include "elf.h"
+#include "memtest.h"
 
-FATFS fat_fs;
+#define BRAM_BASE 0x40000L
+#define BRAM_SIZE 0x20000L
 
-#define DDR_BASE 0x800000000
-#define DDR_SIZE 0x80000000
-#define SD_READ_SIZE 4096
+#define DDR_BASE 0x40000000L
+#define DDR_SIZE 0x40000000L
 
-volatile uint8_t *mark = (uint8_t *)(DDR_BASE + DDR_SIZE - sizeof(uint8_t));
+volatile uint8_t *mark = (uint8_t *)(BRAM_BASE + BRAM_SIZE - sizeof(uint8_t));
+
+extern char _sbi;
+extern int _sbi_size;
 
 void bootloader(int hartid, void *dtb) {
-  uint8_t *load_location = (uint8_t *)(DDR_BASE);
   if (hartid == 0) {
-    FIL fil;
     uart_init();
     printf(">>> Init on hart 0\r\n", 0);
+    printf(">>> OpenSBI ELF at %p", (uint64_t)&_sbi);
+    printf(", size %p bytes\r\n", _sbi_size);
     printf(">>> BootROM DTB at %p\r\n", (uint64_t)dtb);
-    printf(">>> Mounting FAT on SPI SD...\r\n", 0);
-    if (f_mount(&fat_fs, "", 1)) {
-      printf("!!! Failed to mount FAT filesystem\r\n", 0);
-      while (true)
-        ;
+    printf(">>> Setting up machine mode trap...", 0);
+    setup_trap();
+    printf("done.\r\n", 0);
+
+    printf(">>> Loading OpenSBI ELF...\r\n", 0);
+    int ret;
+    if ((ret = load_elf((void*)&_sbi, _sbi_size))) {
+      printf("!!! Failed to load ELF: %d\r\n", ret);
+      for (;;);
     }
-    printf(">>> Loading BOOT.BIN to %p...", (uint64_t)load_location);
-    if (f_open(&fil, "BOOT.BIN", FA_READ)) {
-      printf("\r\n!!! Failed to open BOOT.BIN\r\n", 0);
-      while (true)
-        ;
-    }
-    uint32_t fsize = 0;
-    uint32_t br;
-    FRESULT fr;
-    uint8_t *buf = load_location;
-    do {
-      fr = f_read(&fil, buf, SD_READ_SIZE, &br);
-      buf += br;
-      fsize += br;
-    } while (!(fr || br == 0));
-    printf("loaded %d bytes.\r\n", fsize);
-    if (f_close(&fil)) {
-      printf("!!! Failed to close BOOT.BIN\r\n", 0);
-      while (true)
-        ;
-    }
-    if (f_mount(NULL, "", 1)) {
-      printf("!!! Failed to umount FAT filesystem\r\n", 0);
-      while (true)
-        ;
-    }
-    printf(">>> Branching all harts to %p...\r\n", (uint64_t)load_location);
+    printf("done.\r\n", 0);
+	
+	printf(">>> Performing memtest at base %p, ", DDR_BASE);
+	printf("size %p...\r\n", DDR_SIZE);
+
+	memtest((void*)DDR_BASE, DDR_SIZE);
+
+	printf(">>> Memtest done.\r\n", 0);
+
+    printf(">>> Branching all harts to %p...\r\n", BRAM_BASE);
     __sync_synchronize();
     *mark = 1;
   } else {
@@ -67,5 +56,5 @@ void bootloader(int hartid, void *dtb) {
     __sync_synchronize();
   }
 
-  ((void (*)(int, void *))load_location)(hartid, dtb);
+  ((void(*)(int, void*))BRAM_BASE)(hartid, dtb);
 }

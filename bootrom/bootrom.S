@@ -1,5 +1,5 @@
 // reserve place for bootloader sync mark and stay aligned
-#define DRAM_TOP 0x87ffffff0
+#define DRAM_TOP 0x5fff0
 
 .section .text.start, "ax", @progbits
 .globl _start
@@ -30,11 +30,21 @@ boot_core_hart0:
   slli t0, t0, 12    // 4K stack for each hart
   sub sp, sp, t0
   la a1, _dtb        // dtb address for next level bootloader
-  li t0, 0x87fffffff // address for MARK in bootloader.c
+  li t0, 0x5ffff // address for MARK in bootloader.c
   sb zero, 0(t0)
   jal bootloader
 
+.section .sbi, "a", @progbits
+.balign 4
+.globl _sbi
+_sbi:
+.incbin "fw_payload.elf.strip"
+.globl _sbi_size
+_sbi_size:
+.int _sbi_size - _sbi
+
 .section .rodata.dtb, "a", @progbits
 .globl _dtb
-.align 5, 0
+.balign 4
 _dtb:
+//.string "Hello, world!"
