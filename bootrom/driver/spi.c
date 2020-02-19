@@ -7,8 +7,6 @@
 volatile uint32_t *spi_base_ptr = (uint32_t *)(SPI_BASE);
 
 void spi_init() {
-  uint32_t resp;
-
   // software reset?
   *(spi_base_ptr + SPI_SRR) = 0xa;
 
