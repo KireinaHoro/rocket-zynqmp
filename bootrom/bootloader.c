@@ -10,23 +10,21 @@
 #include "elf.h"
 #include "memtest.h"
 
-#define BRAM_BASE 0x40000L
-#define BRAM_SIZE 0x20000L
-
 #define DDR_BASE 0x40000000L
-#define DDR_SIZE 0x40000000L
+#define DDR_SIZE 0x3ff00000L
 
-volatile uint8_t *mark = (uint8_t *)(BRAM_BASE + BRAM_SIZE - sizeof(uint8_t));
+volatile uint8_t *mark = (uint8_t *)(DDR_BASE + DDR_SIZE - sizeof(uint8_t));
 
-extern char _sbi;
-extern int _sbi_size;
+// SBI ELF is stored in ROM on MMIO bus
+#define SBI_BASE 0xf0000000L
+#define SBI_SIZE 0x80000
 
 void bootloader(int hartid, void *dtb) {
   if (hartid == 0) {
     uart_init();
     printf(">>> Init on hart 0\r\n", 0);
-    printf(">>> OpenSBI ELF at %p", (uint64_t)&_sbi);
-    printf(", size %p bytes\r\n", _sbi_size);
+    printf(">>> OpenSBI ELF at %p", SBI_BASE);
+    printf(", size %p bytes\r\n", SBI_SIZE);
     printf(">>> BootROM DTB at %p\r\n", (uint64_t)dtb);
     printf(">>> Setting up machine mode trap...", 0);
     setup_trap();
@@ -34,20 +32,13 @@ void bootloader(int hartid, void *dtb) {
 
     printf(">>> Loading OpenSBI ELF...\r\n", 0);
     int ret;
-    if ((ret = load_elf((void*)&_sbi, _sbi_size))) {
+    if ((ret = load_elf((void*)SBI_BASE, SBI_SIZE))) {
       printf("!!! Failed to load ELF: %d\r\n", ret);
       for (;;);
     }
     printf("done.\r\n", 0);
 	
-	printf(">>> Performing memtest at base %p, ", DDR_BASE);
-	printf("size %p...\r\n", DDR_SIZE);
-
-	memtest((void*)DDR_BASE, DDR_SIZE);
-
-	printf(">>> Memtest done.\r\n", 0);
-
-    printf(">>> Branching all harts to %p...\r\n", BRAM_BASE);
+    printf(">>> Branching all harts to %p...\r\n", DDR_BASE);
     __sync_synchronize();
     *mark = 1;
   } else {
@@ -56,5 +47,5 @@ void bootloader(int hartid, void *dtb) {
     __sync_synchronize();
   }
 
-  ((void(*)(int, void*))BRAM_BASE)(hartid, dtb);
+  ((void(*)(int, void*))DDR_BASE)(hartid, dtb);
 }
