@@ -1,6 +1,8 @@
 #ifndef _RISCV_BITS_H
 #define _RISCV_BITS_H
 
+#include <stdbool.h>
+
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
 
@@ -32,5 +34,8 @@
 #define LOG_REGBYTES 2
 #endif
 #define REGBYTES (1 << LOG_REGBYTES)
+
+void _assert(bool x, const char *file, int lineno);
+#define assert(x) _assert(x, __FILE__, __LINE__)
 
 #endif

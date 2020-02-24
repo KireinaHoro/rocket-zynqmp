@@ -1,5 +1,7 @@
 #include "memory.h"
 
+#include <stddef.h>
+
 volatile uint64_t *get_bram_base() {
 #ifdef MEM_MAP_BRAM_BASE
   return (uint64_t *)(MEM_MAP_BRAM_BASE);
