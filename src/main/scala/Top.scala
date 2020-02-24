@@ -54,7 +54,6 @@ class BoardTop(params: Params)(implicit val p: Parameters) extends Module {
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
   with HasHierarchicalBusTopology
   with HasPeripheryBootROM
-  with HasPeripheryBRAM
   with HasAsyncExtInterrupts
   with CanHaveMasterAXI4MemPort
   with CanHaveMasterAXI4MMIOPort {
@@ -65,7 +64,6 @@ class RocketTopModuleImp[+L <: RocketTop](_outer: L) extends RocketSubsystemModu
   with HasRTCModuleImp
   with HasExtInterruptsModuleImp
   with HasPeripheryBootROMModuleImp
-  with HasPeripheryBRAMModuleImp
   with DontTouch {
   lazy val mem_axi4 = _outer.mem_axi4
   lazy val mmio_axi4 = _outer.mmio_axi4
