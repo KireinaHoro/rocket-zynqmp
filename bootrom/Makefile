@@ -47,7 +47,7 @@ $(COEGEN): coegen.cpp
 $(driver_library): $(driver_objects)
 	ar rcs $@ $^
 
-.PHONY: $(sbi_elf)
+.PHONY: $(sbi_elf_strip)
 $(sbi_elf_strip):
 	$(MAKE) -C $(sbi_root) CROSS_COMPILE=$(TRIPLE) PLATFORM=$(sbi_platform)
 	cp $(sbi_fw_dir)/$(sbi_elf) .
