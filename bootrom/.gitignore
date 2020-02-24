@@ -3,3 +3,5 @@
 bootrom.rv64.*
 *.a
 *.elf*
+coegen
+.gdbinit
