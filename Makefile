@@ -39,3 +39,7 @@ clean:
 	rm $(OUT_VERILOG) -f
 
 .PHONY:  all clean
+
+bitstream:
+	cd vivado
+	vivado -mode tcl -nolog -nojournal -source src/create_bitstream.tcl
