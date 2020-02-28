@@ -61,6 +61,7 @@ class OverridingConfig[+T <: Params](params: T) extends Config((site, here, up) 
 })
 
 class BoardConfig[+T <: Params](params: T) extends Config(new WithoutTLMonitors ++
+  new sha3.WithSha3Accel ++
   new WithNBreakpoints(params.NBreakpoints) ++
   new WithJtagDTM ++
   new OverridingConfig(params) ++
