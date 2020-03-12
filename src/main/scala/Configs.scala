@@ -2,30 +2,42 @@ package zynqmp
 
 import freechips.rocketchip.config._
 import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
-import freechips.rocketchip.system._
 import freechips.rocketchip.tile._
 
-object EdgeBoardParams extends Params {
+object EdgeBoardSmallParams extends EdgeBoard with GemminiParams {
+  // medium core - no FPU
+  override val MMIOBase = 0xc0000000L // ZynqMP Peripherals, with QSPI
+  override val MMIOSize = 0x40000000L // ZynqMP Peripherals, with QSPI
+}
+class EdgeBoardSmallConfig extends BoardConfig(EdgeBoardSmallParams)
+
+object EdgeBoardParams extends EdgeBoard with SHA3Params
+class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
+
+trait EdgeBoard extends Params {
   override val RAMBase = 0x40000000L // High 1G
   override val RAMSize = 0x3ff00000L // 1 GiB - PMU reserved
   override val MMIOBase = 0xe0000000L // ZynqMP Peripherals
   val NInterrupts = 4 // UART, Ethernet, Ethernet Wake, MMC
   val SystemFreq = 100000000L // 100 MHz
   val NBreakpoints = 8 // # Hardware breakpoints
-  val NCores = 1 // # Big cores
-}
-class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
 
-object ZCU102Params extends Params {
+  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
+}
+
+object ZCU102GemniniParams extends ZCU102 with GemminiParams
+class ZCU102GemniniConfig extends BoardConfig(ZCU102GemniniParams)
+
+trait ZCU102 extends Params {
   override val RAMBase = 0x800000000L // High 2G of SODIMM
   override val RAMSize = 0x80000000L // 2 GiB
   val NInterrupts = 7 // Ethernet, DMA MM2S, DMA S2MM, Timer, UART, IIC, SPI (SD card)
-  val SystemFreq = 50000000L // 50 MHz
+  val SystemFreq = 100000000L // 50 MHz
   val NBreakpoints = 8 // # Hardware breakpoints
-  val NCores = 1 // # Big cores
 }
+
+object ZCU102Params extends ZCU102
 class ZCU102Config extends BoardConfig(ZCU102Params)
 
 abstract class Params {
@@ -39,7 +51,10 @@ abstract class Params {
   val SystemFreq: Long
   val NInterrupts: Int
   val NBreakpoints: Int
-  val NCores: Int
+
+  val CoreConfig: Parameters = new WithNBigCores(1)
+  val DebugConfig: Parameters = Parameters.empty
+  val AuxConfig: Parameters = Parameters.empty
 }
 
 class OverridingConfig[+T <: Params](params: T) extends Config((site, here, up) => {
@@ -61,11 +76,10 @@ class OverridingConfig[+T <: Params](params: T) extends Config((site, here, up) 
 })
 
 class BoardConfig[+T <: Params](params: T) extends Config(new WithoutTLMonitors ++
-  new sha3.WithSha3Accel ++
-  new WithNBreakpoints(params.NBreakpoints) ++
-  new WithJtagDTM ++
+  params.AuxConfig ++
+  params.DebugConfig ++
+  params.CoreConfig ++
   new OverridingConfig(params) ++
-  new WithNBigCores(params.NCores) ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
   new WithTimebase(params.SystemFreq) ++

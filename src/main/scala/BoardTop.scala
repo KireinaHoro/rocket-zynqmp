@@ -1,12 +1,12 @@
 package zynqmp
 
 import chisel3._
-
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy.LazyModule
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
+import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
 
 class EdgeBoardTop(implicit p: Parameters) extends BoardTop(EdgeBoardParams)
 class ZCU102Top(implicit p: Parameters) extends BoardTop(ZCU102Params)
