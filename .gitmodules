@@ -15,10 +15,10 @@
 	url = https://github.com/sifive/sifive-blocks
 [submodule "gemmini"]
 	path = gemmini
-	url = https://github.com/ucb-bar/gemmini/
+	url = https://github.com/KireinaHoro/gemmini/
 [submodule "testchipip"]
 	path = testchipip
-	url = https://github.com/ucb-bar/testchipip/
+	url = https://github.com/KireinaHoro/testchipip/
 [submodule "inclusive-cache"]
 	path = inclusive-cache
 	url = https://github.com/sifive/block-inclusivecache-sifive/
