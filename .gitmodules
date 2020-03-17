@@ -19,3 +19,6 @@
 [submodule "testchipip"]
 	path = testchipip
 	url = https://github.com/ucb-bar/testchipip/
+[submodule "inclusive-cache"]
+	path = inclusive-cache
+	url = https://github.com/sifive/block-inclusivecache-sifive/

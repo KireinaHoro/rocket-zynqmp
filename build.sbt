@@ -28,6 +28,8 @@ lazy val sha3 = (project in file("sha3"))
     libraryDependencies ++= chisel_iotesters
   )
 
+unmanagedSourceDirectories in Compile += (baseDirectory( _ / "inclusive-cache/design/craft/inclusivecache" )).value
+
 lazy val gemmini = (project in file("gemmini"))
   .dependsOn(rocketChip, testchipip)
   .settings(
