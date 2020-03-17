@@ -5,13 +5,6 @@ import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
 
-object EdgeBoardSmallParams extends EdgeBoard with GemminiParams {
-  // medium core - no FPU
-  override val MMIOBase = 0xc0000000L // ZynqMP Peripherals, with QSPI
-  override val MMIOSize = 0x40000000L // ZynqMP Peripherals, with QSPI
-}
-class EdgeBoardSmallConfig extends BoardConfig(EdgeBoardSmallParams)
-
 object EdgeBoardParams extends EdgeBoard with SHA3Params
 class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
 
@@ -26,15 +19,19 @@ trait EdgeBoard extends Params {
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
 }
 
-object ZCU102GemniniParams extends ZCU102 with GemminiParams
-class ZCU102GemniniConfig extends BoardConfig(ZCU102GemniniParams)
+object ZCU102GemminiParams extends ZCU102 with GemminiParams {
+  override val BootROMHang = RAMBase
+}
+class ZCU102GemminiConfig extends BoardConfig(ZCU102GemminiParams)
 
 trait ZCU102 extends Params {
   override val RAMBase = 0x800000000L // High 2G of SODIMM
   override val RAMSize = 0x80000000L // 2 GiB
   val NInterrupts = 7 // Ethernet, DMA MM2S, DMA S2MM, Timer, UART, IIC, SPI (SD card)
-  val SystemFreq = 100000000L // 50 MHz
-  val NBreakpoints = 8 // # Hardware breakpoints
+  val SystemFreq = 100000000L // 100 MHz
+  val NBreakpoints = 4 // # Hardware breakpoints
+
+  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
 }
 
 object ZCU102Params extends ZCU102
@@ -45,9 +42,9 @@ abstract class Params {
   val RAMSize: Long = 0x10000000L
   val MMIOBase: Long = 0x60000000L
   val MMIOSize: Long = 0x20000000L
-  val BootROMBase: Int = 0x10000
+  val BootROMBase: Long = 0x10000
   val BootROMSize: Int = 0x2000
-  val BootROMHang: Int = 0x10000
+  val BootROMHang: Long = 0x10000
   val SystemFreq: Long
   val NInterrupts: Int
   val NBreakpoints: Int
