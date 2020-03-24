@@ -1,0 +1,42 @@
+/include/ "system-conf.dtsi"
+/{
+    chosen {
+        bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused cpuidle.off=1 root=/dev/mmcblk0p2 rw rootwait";
+    };
+    
+    // riscv
+    reserved-memory {
+        #address-cells = <2>;
+        #size-cells = <2>;
+        ranges;
+        riscv@800000000 {
+            reg = <0x8 0x0 0x0 0x80000000>;
+        };
+    };
+};
+
+&i2c1 {
+
+	/* FIXME PL i2c via PCA9306 - u45 */
+	/* FIXME MSP430 - u41 - not detected */
+	i2c-mux@74 { /* u34 */
+		i2c@0 { /* i2c mw 74 0 1 */
+			/*
+			 * IIC_EEPROM 1kB memory which uses 256B blocks
+			 * where every block has different address.
+			 *    0 - 256B address 0x54
+			 * 256B - 512B address 0x55
+			 * 512B - 768B address 0x56
+			 * 768B - 1024B address 0x57
+			 */
+			eeprom: eeprom@54 { /* u23 */
+				compatible = "atmel,24c08";
+				reg = <0x54>;
+			};
+		};
+	};
+};
+
+&uart1 {
+	status = "disabled";
+};
