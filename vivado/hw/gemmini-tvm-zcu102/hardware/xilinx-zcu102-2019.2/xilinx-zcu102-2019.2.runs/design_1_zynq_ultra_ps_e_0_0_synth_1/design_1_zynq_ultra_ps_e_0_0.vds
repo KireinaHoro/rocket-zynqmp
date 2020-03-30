@@ -1,0 +1,540 @@
+#-----------------------------------------------------------
+# Vivado v2019.2 (64-bit)
+# SW Build 2700185 on Thu Oct 24 18:45:48 MDT 2019
+# IP Build 2699827 on Thu Oct 24 21:16:38 MDT 2019
+# Start of session at: Fri Oct 25 02:06:03 2019
+# Process ID: 47344
+# Current directory: /tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1
+# Command line: vivado -log design_1_zynq_ultra_ps_e_0_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_zynq_ultra_ps_e_0_0.tcl
+# Log file: /tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/design_1_zynq_ultra_ps_e_0_0.vds
+# Journal file: /tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/vivado.jou
+#-----------------------------------------------------------
+Sourcing tcl script '/home/xbrbbot/.Xilinx/Vivado/Vivado_init.tcl'
+135 Beta devices matching pattern found, 135 enabled.
+enable_beta_device: Time (s): cpu = 00:00:04 ; elapsed = 00:00:08 . Memory (MB): peak = 1627.211 ; gain = 40.023 ; free physical = 123498 ; free virtual = 533357
+Sourcing tcl script '/tmp/tmp.BDIFeFF2Gk/dummy.tcl'
+0 Beta devices matching pattern found, 0 enabled.
+source design_1_zynq_ultra_ps_e_0_0.tcl -notrace
+Command: synth_design -top design_1_zynq_ultra_ps_e_0_0 -part xczu9eg-ffvb1156-2-e -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xczu9eg'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xczu9eg'
+INFO: [Device 21-403] Loading part xczu9eg-ffvb1156-2-e
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 123369 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:05 . Memory (MB): peak = 2570.141 ; gain = 0.000 ; free physical = 122375 ; free virtual = 532367
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'design_1_zynq_ultra_ps_e_0_0' [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/synth/design_1_zynq_ultra_ps_e_0_0.v:59]
+INFO: [Synth 8-6157] synthesizing module 'zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e' [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:340]
+	Parameter C_MAXIGP0_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_MAXIGP1_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_MAXIGP2_DATA_WIDTH bound to: 32 - type: integer 
+	Parameter C_SAXIGP0_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP1_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP2_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP3_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP4_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP5_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SAXIGP6_DATA_WIDTH bound to: 128 - type: integer 
+	Parameter C_SD0_INTERNAL_BUS_WIDTH bound to: 8 - type: integer 
+	Parameter C_SD1_INTERNAL_BUS_WIDTH bound to: 8 - type: integer 
+	Parameter C_PL_CLK0_BUF bound to: TRUE - type: string 
+	Parameter C_PL_CLK1_BUF bound to: FALSE - type: string 
+	Parameter C_PL_CLK2_BUF bound to: FALSE - type: string 
+	Parameter C_PL_CLK3_BUF bound to: FALSE - type: string 
+	Parameter C_NUM_F2P_0_INTR_INPUTS bound to: 1 - type: integer 
+	Parameter C_NUM_F2P_1_INTR_INPUTS bound to: 1 - type: integer 
+	Parameter C_NUM_FABRIC_RESETS bound to: 1 - type: integer 
+	Parameter C_EMIO_GPIO_WIDTH bound to: 1 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP0 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP1 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP2 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP3 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP4 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP5 bound to: 0 - type: integer 
+	Parameter C_USE_DIFF_RW_CLK_GP6 bound to: 0 - type: integer 
+	Parameter C_TRACE_PIPELINE_WIDTH bound to: 8 - type: integer 
+	Parameter C_EN_EMIO_TRACE bound to: 0 - type: integer 
+	Parameter C_EN_FIFO_ENET0 bound to: 0 - type: string 
+	Parameter C_EN_FIFO_ENET1 bound to: 0 - type: string 
+	Parameter C_EN_FIFO_ENET2 bound to: 0 - type: string 
+	Parameter C_EN_FIFO_ENET3 bound to: 0 - type: string 
+	Parameter C_TRACE_DATA_WIDTH bound to: 32 - type: integer 
+	Parameter C_USE_DEBUG_TEST bound to: 0 - type: integer 
+	Parameter C_DP_USE_AUDIO bound to: 0 - type: integer 
+	Parameter C_DP_USE_VIDEO bound to: 0 - type: integer 
+INFO: [Synth 8-5534] Detected attribute (* keep = "true" *) [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:2374]
+INFO: [Synth 8-5534] Detected attribute (* keep = "true" *) [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:2375]
+INFO: [Synth 8-6157] synthesizing module 'BUFG_PS' [/proj/xbuilds/SWIP/2019.2_1024_1831/installs/lin64/Vivado/2019.2/scripts/rt/data/unisim_comp.v:1299]
+	Parameter SIM_DEVICE bound to: ULTRASCALE_PLUS - type: string 
+	Parameter STARTUP_SYNC bound to: FALSE - type: string 
+INFO: [Synth 8-6155] done synthesizing module 'BUFG_PS' (1#1) [/proj/xbuilds/SWIP/2019.2_1024_1831/installs/lin64/Vivado/2019.2/scripts/rt/data/unisim_comp.v:1299]
+INFO: [Synth 8-6157] synthesizing module 'PS8' [/proj/xbuilds/SWIP/2019.2_1024_1831/installs/lin64/Vivado/2019.2/scripts/rt/data/unisim_comp.v:63170]
+INFO: [Synth 8-6155] done synthesizing module 'PS8' (2#1) [/proj/xbuilds/SWIP/2019.2_1024_1831/installs/lin64/Vivado/2019.2/scripts/rt/data/unisim_comp.v:63170]
+WARNING: [Synth 8-7023] instance 'PS8_i' of module 'PS8' has 1015 connections declared, but only 957 given [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:3894]
+WARNING: [Synth 8-3848] Net dp_audio_ref_clk in module/entity zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e does not have driver. [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:393]
+WARNING: [Synth 8-3848] Net irq_ipi_pl_0 in module/entity zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e does not have driver. [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:1413]
+WARNING: [Synth 8-3848] Net irq_ipi_pl_1 in module/entity zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e does not have driver. [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:1414]
+WARNING: [Synth 8-3848] Net irq_ipi_pl_2 in module/entity zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e does not have driver. [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:1415]
+WARNING: [Synth 8-3848] Net irq_ipi_pl_3 in module/entity zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e does not have driver. [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:1416]
+INFO: [Synth 8-6155] done synthesizing module 'zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e' (3#1) [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/hdl/zynq_ultra_ps_e_v3_3_1.v:340]
+WARNING: [Synth 8-7023] instance 'inst' of module 'zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e' has 1491 connections declared, but only 1487 given [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/synth/design_1_zynq_ultra_ps_e_0_0.v:109]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_zynq_ultra_ps_e_0_0' (4#1) [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/synth/design_1_zynq_ultra_ps_e_0_0.v:59]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port dp_audio_ref_clk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port irq_ipi_pl_0
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port irq_ipi_pl_1
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port irq_ipi_pl_2
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port irq_ipi_pl_3
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihpc0_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihpc0_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihpc1_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihpc1_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp0_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp0_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp1_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp1_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp2_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp2_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp3_fpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxihp3_fpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxi_lpd_rclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port saxi_lpd_wclk
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[15]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[14]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[13]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[12]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[11]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[10]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[9]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[8]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[7]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_awuser[6]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[15]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[14]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[13]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[12]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[11]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[10]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[9]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[8]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[7]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port sacefpd_aruser[6]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_clk[3]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_clk[2]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_clk[1]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_clk[0]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[31]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[30]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[29]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[28]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[27]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[26]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[25]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[24]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[23]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[22]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[21]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[20]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[19]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[18]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[17]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[16]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[15]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[14]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[13]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[12]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[11]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[10]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[9]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[8]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[7]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[6]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[5]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[4]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[3]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[2]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[1]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc_in[0]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[31]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[30]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[29]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[28]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[27]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[26]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[25]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[24]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[23]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[22]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[21]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[20]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[19]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[18]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[17]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[16]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[15]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[14]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[13]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[12]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[11]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[10]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[9]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[8]
+WARNING: [Synth 8-3331] design zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e has unconnected port test_adc2_in[7]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:07 . Memory (MB): peak = 2629.922 ; gain = 59.781 ; free physical = 122403 ; free virtual = 532397
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:08 . Memory (MB): peak = 2633.887 ; gain = 63.746 ; free physical = 122396 ; free virtual = 532391
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:08 . Memory (MB): peak = 2633.887 ; gain = 63.746 ; free physical = 122396 ; free virtual = 532391
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2644.793 ; gain = 0.000 ; free physical = 122388 ; free virtual = 532382
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0_ooc.xdc] for cell 'inst'
+Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0.xdc] for cell 'inst'
+Finished Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0.xdc] for cell 'inst'
+Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2680.637 ; gain = 0.000 ; free physical = 122293 ; free virtual = 532297
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.03 . Memory (MB): peak = 2680.637 ; gain = 0.000 ; free physical = 122291 ; free virtual = 532295
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:16 ; elapsed = 00:00:26 . Memory (MB): peak = 2680.637 ; gain = 110.496 ; free physical = 122368 ; free virtual = 532372
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xczu9eg-ffvb1156-2-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:16 ; elapsed = 00:00:27 . Memory (MB): peak = 2680.641 ; gain = 110.500 ; free physical = 122366 ; free virtual = 532370
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for inst/PS8_i. (constraint file  /tmp/tmp.BDIFeFF2Gk/temp/project_1.srcs/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0.xdc, line 25).
+Applied set_property DONT_TOUCH = true for inst. (constraint file  /tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:16 ; elapsed = 00:00:27 . Memory (MB): peak = 2680.641 ; gain = 110.500 ; free physical = 122372 ; free virtual = 532376
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:17 ; elapsed = 00:00:27 . Memory (MB): peak = 2680.641 ; gain = 110.500 ; free physical = 122372 ; free virtual = 532376
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 2520 (col length:168)
+BRAMs: 1824 (col length: RAMB18 168 RAMB36 84)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:28 . Memory (MB): peak = 2680.641 ; gain = 110.500 ; free physical = 122358 ; free virtual = 532366
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:42 ; elapsed = 00:01:34 . Memory (MB): peak = 4343.320 ; gain = 1773.180 ; free physical = 119979 ; free virtual = 530072
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:42 ; elapsed = 00:01:34 . Memory (MB): peak = 4368.328 ; gain = 1798.188 ; free physical = 119959 ; free virtual = 530052
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:49 ; elapsed = 00:01:41 . Memory (MB): peak = 4381.273 ; gain = 1811.133 ; free physical = 119962 ; free virtual = 530060
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[0]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[31] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[30] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[29] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[28] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[27] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[26] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[25] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[24] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[23] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[22] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[21] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[20] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[19] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[18] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[17] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[16] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[15] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[14] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[13] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[12] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[11] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[10] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[9] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[8] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[7] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[6] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[5] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[4] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[3] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[2] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[1] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[0]_inferred:in0[0] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[7]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[6]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[5]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[4]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[3]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[2]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_ctl_pipe[1]_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[31] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[30] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[29] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[28] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[27] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[26] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[25] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[24] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[23] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[22] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[21] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[20] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[19] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[18] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[17] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[16] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[15] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[14] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[13] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[12] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[11] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[10] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[9] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[8] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[7] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[6] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[5] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[4] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[3] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[2] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[1] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[7]_inferred:in0[0] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[31] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[30] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[29] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[28] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[27] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[26] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[25] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[24] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[23] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[22] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[21] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[20] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[19] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[18] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[17] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[16] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[15] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[14] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[13] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[12] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[11] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[10] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[9] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[8] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[7] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[6] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[5] to constant 0
+INFO: [Synth 8-3295] tying undriven pin trace_data_pipe[6]_inferred:in0[4] to constant 0
+INFO: [Common 17-14] Message 'Synth 8-3295' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119843 ; free virtual = 529941
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119843 ; free virtual = 529941
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119842 ; free virtual = 529940
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119842 ; free virtual = 529940
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119842 ; free virtual = 529940
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119841 ; free virtual = 529939
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+--------+------+
+|      |Cell    |Count |
++------+--------+------+
+|1     |BUFG_PS |     1|
+|2     |LUT1    |   300|
+|3     |PS8     |     1|
+|4     |FDRE    |     1|
++------+--------+------+
+
+Report Instance Areas: 
++------+---------+---------------------------------------+------+
+|      |Instance |Module                                 |Cells |
++------+---------+---------------------------------------+------+
+|1     |top      |                                       |   303|
+|2     |  inst   |zynq_ultra_ps_e_v3_3_1_zynq_ultra_ps_e |   303|
++------+---------+---------------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.184 ; gain = 1821.043 ; free physical = 119841 ; free virtual = 529939
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 569 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:48 ; elapsed = 00:01:34 . Memory (MB): peak = 4391.184 ; gain = 1774.293 ; free physical = 119880 ; free virtual = 529978
+Synthesis Optimization Complete : Time (s): cpu = 00:00:56 ; elapsed = 00:01:48 . Memory (MB): peak = 4391.188 ; gain = 1821.043 ; free physical = 119880 ; free virtual = 529978
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4391.188 ; gain = 0.000 ; free physical = 119949 ; free virtual = 530047
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4425.902 ; gain = 0.000 ; free physical = 119875 ; free virtual = 529973
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+122 Infos, 107 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:10 ; elapsed = 00:02:13 . Memory (MB): peak = 4425.902 ; gain = 2744.051 ; free physical = 121052 ; free virtual = 531150
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4425.902 ; gain = 0.000 ; free physical = 121052 ; free virtual = 531150
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/design_1_zynq_ultra_ps_e_0_0.dcp' has been generated.
+WARNING: [Common 17-576] 'use_project_ipc' is deprecated. This option is deprecated and no longer used.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP design_1_zynq_ultra_ps_e_0_0, cache-ID = a551b48322252a23
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4425.906 ; gain = 0.000 ; free physical = 121013 ; free virtual = 531113
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+INFO: [Common 17-1381] The checkpoint '/tmp/tmp.BDIFeFF2Gk/temp/project_1.runs/design_1_zynq_ultra_ps_e_0_0_synth_1/design_1_zynq_ultra_ps_e_0_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file design_1_zynq_ultra_ps_e_0_0_utilization_synth.rpt -pb design_1_zynq_ultra_ps_e_0_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Oct 25 02:08:47 2019...

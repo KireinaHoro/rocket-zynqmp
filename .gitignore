@@ -2,3 +2,4 @@ build
 target
 lib
 .idea
+gemmini_params.h
