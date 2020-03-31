@@ -4,7 +4,6 @@ import chisel3._
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.devices.debug.SimJTAG
 import freechips.rocketchip.diplomacy.LazyModule
-import freechips.rocketchip.system.SimAXIMem
 import sifive.blocks.devices.uart.UARTAdapter
 
 class TestHarness(implicit p: Parameters) extends Module {
