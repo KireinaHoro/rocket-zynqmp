@@ -61,11 +61,15 @@ verilator: $(INSTALLED_VERILATOR)
 
 # Run Verilator to produce a fast binary to emulate this circuit.
 VERILATOR := $(INSTALLED_VERILATOR) --cc --exe
-VERILATOR_THREADS ?= 16
+VERILATOR_THREADS ?= 32
 VERILATOR_FLAGS := --top-module $(MODEL) \
 	+define+PRINTF_COND=\$$c\(\"verbose\",\"\&\&\"\,\"done_reset\"\) \
+	+define+RANDOMIZE_REG_INIT \
 	+define+RANDOMIZE_GARBAGE_ASSIGN \
-	+define+STOP_COND=\$$c\(\"done_reset\"\) --assert \
+	+define+RANDOMIZE_INVALID_ASSIGN \
+	+define+PRINT_COND=\$$c\(\"done_reset\"\) \
+	+define+STOP_COND=\$$c\(\"done_reset\"\) \
+	--assert \
 	--output-split 20000 \
 	--output-split-cfuncs 20000 \
 	--threads $(VERILATOR_THREADS) -Wno-UNOPTTHREADS \
@@ -87,31 +91,31 @@ $(emu): $(verilog) $(cppfiles) $(headers) $(INSTALLED_VERILATOR)
 	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(dir $(model_header)) \
 	-o $@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
 	-CFLAGS "-I$(VERILATOR_BUILD) -include $(model_header)"
-	$(MAKE) VM_PARALLEL_BUILDS=1 -C $(dir $(model_header)) -f V$(MODEL).mk
+	$(MAKE) -j$(shell nproc) VM_PARALLEL_BUILDS=1 -C $(dir $(model_header)) -f V$(MODEL).mk
 
 $(emu_debug): $(verilog) $(cppfiles) $(headers) $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).d $(INSTALLED_VERILATOR)
 	mkdir -p $(dir $(model_header_debug))
 	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(dir $(model_header_debug))  --trace \
 	-o $@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
 	-CFLAGS "-I$(VERILATOR_BUILD)/debug -include $(model_header_debug)"
-	$(MAKE) VM_PARALLEL_BUILDS=1 -C $(dir $(model_header_debug)) -f V$(MODEL).mk
+	$(MAKE) -j$(shell nproc) VM_PARALLEL_BUILDS=1 -C $(dir $(model_header_debug)) -f V$(MODEL).mk
 
-$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).fir:
+$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).fir $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).d:
 	mkdir -p $(@D)
 	cd .. && \
 	$(SBT) "runMain freechips.rocketchip.system.Generator $(VERILATOR_BUILD) $(PROJECT) $(MODEL) $(PROJECT) $(CONFIG)"
 
-%.v: %.fir
+$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).v $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).conf : $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).fir
 	cd .. && \
 	$(SBT) "runMain firrtl.stage.FirrtlMain \
 	-i $< -o $@ -X verilog \
 	--infer-rw $(MODEL) \
-	--repl-seq-mem -c:$(MODEL):-o:$*.conf \
-	-faf $*.anno.json \
+	--repl-seq-mem -c:$(MODEL):-o:$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).conf \
+	-faf $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).anno.json \
 	-td $(VERILATOR_BUILD) \
 	"
 
-%.behav_srams.v : %.conf $(VLSI_MEM_GEN)
+$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).behav_srams.v : $(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).conf $(VLSI_MEM_GEN)
 	cd $(VERILATOR_BUILD) && \
 	$(VLSI_MEM_GEN) $< > $@.tmp && \
 	mv -f $@.tmp $@
