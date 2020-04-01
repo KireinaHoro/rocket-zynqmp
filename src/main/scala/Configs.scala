@@ -19,11 +19,6 @@ trait EdgeBoard extends Params {
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
 }
 
-object ZCU102GemminiParams extends ZCU102 with GemminiParams {
-  override val BootROMHang = RAMBase
-}
-class ZCU102GemminiConfig extends BoardConfig(ZCU102GemminiParams)
-
 trait ZCU102 extends Params {
   override val RAMBase = 0x800000000L // High 2G of SODIMM
   override val RAMSize = 0x80000000L // 2 GiB
