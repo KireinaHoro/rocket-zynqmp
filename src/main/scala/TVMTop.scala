@@ -7,6 +7,7 @@ import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
 import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
+import nvidia.blocks.dla.CanHavePeripheryNVDLA
 
 class TVMEvaluator(implicit p: Parameters) extends MultiIOModule {
   val inst = Module(LazyModule(new TVMTop).module)
@@ -38,6 +39,7 @@ class TVMEvaluator(implicit p: Parameters) extends MultiIOModule {
 class TVMTop(implicit p: Parameters) extends RocketSubsystem
   with HasHierarchicalBusTopology
   with HasPeripheryUART
+  with CanHavePeripheryNVDLA
   with CanHaveMasterAXI4MemPort {
   override lazy val module = new TVMTopModuleImp(this)
 

@@ -6,6 +6,7 @@ import freechips.rocketchip.diplomacy.{LazyModule, ValName}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile.{BuildRoCC, OpcodeSet}
 import gemmini.{CapacityInKilobytes, Gemmini, GemminiConfigs}
+import nvidia.blocks.dla._
 import sifive.blocks.devices.uart._
 
 object Common {
@@ -47,6 +48,12 @@ trait GemminiParams extends Params {
 }
 
 
+trait NVDLAParams extends Params {
+  // use big cores
+  override val NInterrupts = 0 // no external interrupts
+  override val AuxConfig = Common.uart ++
+    new WithNVDLA("small")
+}
 
 trait SHA3Params extends Params {
   override val AuxConfig = new sha3.WithSha3Accel
@@ -66,3 +73,6 @@ class VerilatorGemminiParams extends ZCU102GemminiParams with DMIDebug
 
 class VerilatorGemminiConfig extends BoardConfig(new VerilatorGemminiParams)
 
+class ZCU102NVDLAParams extends ZCU102 with NVDLAParams with RAMInit
+
+class ZCU102NVDLAConfig extends BoardConfig(new ZCU102NVDLAParams)
