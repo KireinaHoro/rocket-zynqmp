@@ -29,6 +29,7 @@ lazy val sha3 = (project in file("sha3"))
   )
 
 unmanagedSourceDirectories in Compile += (baseDirectory( _ / "inclusive-cache/design/craft/inclusivecache" )).value
+unmanagedSourceDirectories in Compile += (baseDirectory( _ / "nvdla" )).value
 
 lazy val gemmini = (project in file("gemmini"))
   .dependsOn(rocketChip, testchipip)
