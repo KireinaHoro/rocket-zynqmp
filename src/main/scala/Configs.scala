@@ -5,30 +5,33 @@ import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
 
-object EdgeBoardParams extends EdgeBoard with SHA3Params
-class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
+trait RAMInit extends Params {
+  override val BootROMHang = RAMBase
+}
 
 trait EdgeBoard extends Params {
   override val RAMBase = 0x40000000L // High 1G
   override val RAMSize = 0x3ff00000L // 1 GiB - PMU reserved
   override val MMIOBase = 0xe0000000L // ZynqMP Peripherals
-  val NInterrupts = 4 // UART, Ethernet, Ethernet Wake, MMC
+  val NInterrupts = 1 // AXI IntC
+  val SystemFreq = 100000000L // 100 MHz
+  val NBreakpoints = 8 // # Hardware breakpoints
+
+  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
+  override val CoreConfig = new WithNBigCores(2)
+}
+object EdgeBoardParams extends EdgeBoard with RAMInit
+class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
+
+trait ZCU102 extends Params {
+  override val RAMBase = 0x800000000L // High 2G of SODIMM
+  override val RAMSize = 0x80000000L // 2 GiB
+  val NInterrupts = 1 // AXI IntC
   val SystemFreq = 100000000L // 100 MHz
   val NBreakpoints = 8 // # Hardware breakpoints
 
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
 }
-
-trait ZCU102 extends Params {
-  override val RAMBase = 0x800000000L // High 2G of SODIMM
-  override val RAMSize = 0x80000000L // 2 GiB
-  val NInterrupts = 7 // Ethernet, DMA MM2S, DMA S2MM, Timer, UART, IIC, SPI (SD card)
-  val SystemFreq = 100000000L // 100 MHz
-  val NBreakpoints = 4 // # Hardware breakpoints
-
-  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
-}
-
 object ZCU102Params extends ZCU102
 class ZCU102Config extends BoardConfig(ZCU102Params)
 
