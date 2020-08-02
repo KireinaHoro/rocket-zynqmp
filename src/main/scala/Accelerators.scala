@@ -9,16 +9,6 @@ import gemmini.{CapacityInKilobytes, Gemmini, GemminiConfigs}
 import nvidia.blocks.dla._
 import sifive.blocks.devices.uart._
 
-object Common {
-  val uart = new Config((_, _, _) => {
-    case PeripheryUARTKey => List(
-      UARTParams(address = 0x10010000),
-      UARTParams(address = 0x10020000),
-    )
-  })
-  val l2cache = new WithInclusiveCache
-}
-
 class AlternativeGemminiConfig extends Config((site, here, up) => {
   case BuildRoCC => Seq(
     (p: Parameters) => {

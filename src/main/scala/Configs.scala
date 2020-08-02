@@ -4,9 +4,28 @@ import freechips.rocketchip.config._
 import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
+import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
+import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 
 trait RAMInit extends Params {
   override val BootROMHang = RAMBase
+}
+
+object Common {
+  val uart = new Config((_, _, _) => {
+    case PeripheryUARTKey => List(
+      UARTParams(address = 0x10010000),
+      UARTParams(address = 0x10011000),
+    )
+  })
+  // beware address conflict with UART!
+  val pwm = new Config((_, _, _) => {
+    case PeripheryPWMKey => List(
+      PWMParams(address = 0x10020000),
+      PWMParams(address = 0x10021000),
+    )
+  })
+  val l2cache = new WithInclusiveCache
 }
 
 trait EdgeBoard extends Params {
@@ -15,10 +34,11 @@ trait EdgeBoard extends Params {
   override val MMIOBase = 0xe0000000L // ZynqMP Peripherals
   val NInterrupts = 1 // AXI IntC
   val SystemFreq = 100000000L // 100 MHz
-  val NBreakpoints = 8 // # Hardware breakpoints
+  val NBreakpoints = 4 // # Hardware breakpoints
 
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
   override val CoreConfig = new WithNBigCores(2)
+  override val AuxConfig = Common.uart ++ Common.pwm ++ Common.l2cache
 }
 object EdgeBoardParams extends EdgeBoard with RAMInit
 class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
@@ -28,7 +48,7 @@ trait ZCU102 extends Params {
   override val RAMSize = 0x80000000L // 2 GiB
   val NInterrupts = 1 // AXI IntC
   val SystemFreq = 100000000L // 100 MHz
-  val NBreakpoints = 8 // # Hardware breakpoints
+  val NBreakpoints = 4 // # Hardware breakpoints
 
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
 }
