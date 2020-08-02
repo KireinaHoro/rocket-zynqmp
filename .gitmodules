@@ -12,7 +12,7 @@
 	url = https://github.com/KireinaHoro/sha3
 [submodule "sifive-blocks"]
 	path = sifive-blocks
-	url = https://github.com/sifive/sifive-blocks
+	url = https://github.com/KireinaHoro/sifive-blocks
 [submodule "gemmini"]
 	path = gemmini
 	url = https://github.com/KireinaHoro/gemmini/
