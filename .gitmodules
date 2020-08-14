@@ -4,18 +4,9 @@
 [submodule "opensbi"]
 	path = opensbi
 	url = https://github.com/KireinaHoro/opensbi
-[submodule "u-boot"]
-	path = u-boot
-	url = https://github.com/KireinaHoro/u-boot
-[submodule "sha3"]
-	path = sha3
-	url = https://github.com/KireinaHoro/sha3
 [submodule "sifive-blocks"]
 	path = sifive-blocks
 	url = https://github.com/KireinaHoro/sifive-blocks
-[submodule "gemmini"]
-	path = gemmini
-	url = https://github.com/KireinaHoro/gemmini/
 [submodule "testchipip"]
 	path = testchipip
 	url = https://github.com/KireinaHoro/testchipip/

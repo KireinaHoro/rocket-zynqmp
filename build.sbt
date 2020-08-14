@@ -22,22 +22,9 @@ lazy val sifiveBlocks = (project in file("sifive-blocks"))
 lazy val testchipip = (project in file("testchipip"))
   .dependsOn(sifiveBlocks, rocketChip)
 
-lazy val sha3 = (project in file("sha3"))
-  .dependsOn(rocketChip)
-  .settings(
-    libraryDependencies ++= chisel_iotesters
-  )
-
 unmanagedSourceDirectories in Compile += (baseDirectory( _ / "inclusive-cache/design/craft/inclusivecache" )).value
-unmanagedSourceDirectories in Compile += (baseDirectory( _ / "nvdla" )).value
-
-lazy val gemmini = (project in file("gemmini"))
-  .dependsOn(rocketChip, testchipip)
-  .settings(
-    libraryDependencies ++= chisel_iotesters,
-  )
 
 lazy val root = (project in file("."))
-  .dependsOn(rocketChip, sha3, gemmini, sifiveBlocks)
+  .dependsOn(rocketChip, sifiveBlocks)
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
