@@ -63,6 +63,10 @@ class VerilatorGemminiParams extends ZCU102GemminiParams with DMIDebug
 
 class VerilatorGemminiConfig extends BoardConfig(new VerilatorGemminiParams)
 
-class ZCU102NVDLAParams extends ZCU102 with NVDLAParams with RAMInit
+class ZCU102NVDLAParams extends ZCU102 with NVDLAParams with RAMInit {
+  override val RAMBase = 0x80000000L // DDR4 SDRAM component 512M
+  override val RAMSize = 0x20000000L
+  override val BootROMHang = RAMBase
+}
 
 class ZCU102NVDLAConfig extends BoardConfig(new ZCU102NVDLAParams)

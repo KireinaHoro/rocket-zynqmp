@@ -3,7 +3,7 @@ ROCKET_DIR ?= $(BASE_DIR)/rocket-chip
 TESTCHIPIP_DIR = $(BASE_DIR)/testchipip
 PROJECT ?= zynqmp
 TOP_MODULE ?= TVMEvaluator
-CONFIG ?= ZCU102GemminiConfig
+CONFIG ?= ZCU102NVDLAConfig
 
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build

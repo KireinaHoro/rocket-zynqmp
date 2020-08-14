@@ -16,7 +16,7 @@ sbi_elf_strip	:= fw_payload.elf.strip
 sbi_coe = $(sbi_elf_strip).coe
 
 HOST_CXX=g++
-TRIPLE=riscv64-linux-gnu-
+TRIPLE=riscv64-unknown-elf-
 GCC=$(TRIPLE)gcc
 CFLAGS_RV64=-g -Wall -Werror -nostdlib -fno-strict-aliasing \
 	-Os -fno-omit-frame-pointer -fno-optimize-sibling-calls \
