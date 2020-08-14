@@ -45,10 +45,6 @@ trait NVDLAParams extends Params {
     new WithNVDLA("small")
 }
 
-trait SHA3Params extends Params {
-  override val AuxConfig = new sha3.WithSha3Accel
-}
-
 trait DMIDebug extends Params {
   override val DebugConfig = new Config((site, here, up) => {
     case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
