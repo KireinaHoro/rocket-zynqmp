@@ -22,6 +22,3 @@
 [submodule "inclusive-cache"]
 	path = inclusive-cache
 	url = https://github.com/sifive/block-inclusivecache-sifive/
-[submodule "nvdla"]
-	path = nvdla
-	url = https://github.com/ucb-bar/nvdla-wrapper
