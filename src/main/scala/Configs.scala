@@ -1,7 +1,9 @@
 package zynqmp
 
 import freechips.rocketchip.config._
+import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink._
+import freechips.rocketchip.diplomacy.{LazyModule, ValName}
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
 import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
@@ -9,6 +11,12 @@ import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 
 trait RAMInit extends Params {
   override val BootROMHang = RAMBase
+}
+
+trait DMIDebug extends Params {
+  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new Config((site, here, up) => {
+    case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
+  })
 }
 
 object Common {
@@ -40,20 +48,14 @@ trait EdgeBoard extends Params {
   override val CoreConfig = new WithNBigCores(2)
   override val AuxConfig = Common.uart ++ Common.pwm ++ Common.l2cache
 }
-object EdgeBoardParams extends EdgeBoard with RAMInit
-class EdgeBoardConfig extends BoardConfig(EdgeBoardParams)
-
-trait ZCU102 extends Params {
-  override val RAMBase = 0x800000000L // High 2G of SODIMM
-  override val RAMSize = 0x80000000L // 2 GiB
-  val NInterrupts = 1 // AXI IntC
-  val SystemFreq = 100000000L // 100 MHz
-  val NBreakpoints = 4 // # Hardware breakpoints
-
-  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
+class EdgeBoardParams extends EdgeBoard with RAMInit
+class EdgeBoardConfig extends BoardConfig(new EdgeBoardParams)
+object MidgardVerilatorParams extends EdgeBoardParams with DMIDebug {
+  // single core, no LLC, no PWM
+  override val CoreConfig = new WithNBigCores(1)
+  override val AuxConfig = Common.uart
 }
-object ZCU102Params extends ZCU102
-class ZCU102Config extends BoardConfig(ZCU102Params)
+class MidgardVerilatorConfig extends BoardConfig(MidgardVerilatorParams)
 
 abstract class Params {
   val RAMBase: Long = 0x80000000L

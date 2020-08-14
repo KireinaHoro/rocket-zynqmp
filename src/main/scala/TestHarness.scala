@@ -2,17 +2,19 @@ package zynqmp
 
 import chisel3._
 import freechips.rocketchip.config.Parameters
+import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.diplomacy.LazyModule
-import freechips.rocketchip.util.AsyncResetReg
-import sifive.blocks.devices.uart.UARTAdapter
+import freechips.rocketchip.subsystem._
+import freechips.rocketchip.util._
+import sifive.blocks.devices.uart._
 
 class TestHarness(implicit p: Parameters) extends Module {
   val io = IO(new Bundle {
     val success = Output(Bool())
   })
 
-  val ldut = LazyModule(new TVMTop)
+  val ldut = LazyModule(new VerilatorTop)
   val dut = Module(ldut.module)
 
   // Allow the debug ndreset to reset the dut, but not until the initial reset has completed
@@ -25,7 +27,28 @@ class TestHarness(implicit p: Parameters) extends Module {
   SimAXIMem.connectMem(ldut)
 
   // UART - only connect the first one
-  val uartDpi = Module(new UARTAdapter(0, 115200))
+  // baud rate 15M
+  val uartDpi = Module(new UARTAdapter(0, 15000000))
   uartDpi.io.uart <> dut.uart.head
   dut.uart(1).rxd := 0.U
+}
+
+class VerilatorTop(implicit p: Parameters) extends RocketSubsystem
+  with HasHierarchicalBusTopology
+  with HasPeripheryUART
+  with CanHaveMasterAXI4MemPort {
+  override lazy val module = new VerilatorTopModuleImp(this)
+
+  def resetVector = p(BootROMParams).hang
+}
+
+class VerilatorTopModuleImp[+L <: VerilatorTop](outer: L) extends RocketSubsystemModuleImp(outer)
+  with HasRTCModuleImp
+  with HasPeripheryUARTModuleImp
+  with HasResetVectorWire
+  with DontTouch {
+  lazy val mem_axi4 = outer.mem_axi4
+
+  println(f"global reset vector at 0x${outer.resetVector}%x")
+  global_reset_vector := outer.resetVector.U
 }
