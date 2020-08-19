@@ -3,12 +3,13 @@ ROCKET_DIR ?= $(BASE_DIR)/rocket-chip
 TESTCHIPIP_DIR = $(BASE_DIR)/testchipip
 PROJECT ?= zynqmp
 TOP_MODULE ?= TVMEvaluator
-CONFIG ?= ZCU102NVDLAConfig
+CONFIG ?= VerilatorNVDLAConfig
 
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build
 BOOTROM = $(BASE_DIR)/bootrom
 OUT_VERILOG = $(BUILD)/$(PROJECT).$(CONFIG).v
+RESOURCES = $(BASE_DIR)/src/main/resources
 
 SHELL := /bin/bash
 
@@ -43,7 +44,6 @@ verilator:
 	$(SBT) "runMain firrtl.stage.FirrtlMain -i $< -o $@ -X verilog"
 
 clean:
-	$(MAKE) -C $(BOOTROM) clean
 	rm -rf build/*
 
 .PHONY:  all clean
