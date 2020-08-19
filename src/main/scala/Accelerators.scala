@@ -52,11 +52,8 @@ trait DMIDebug extends Params {
 }
 
 class ZCU102GemminiParams extends ZCU102 with GemminiParams with RAMInit
-
 class ZCU102GemminiConfig extends BoardConfig(new ZCU102GemminiParams)
-
 class VerilatorGemminiParams extends ZCU102GemminiParams with DMIDebug
-
 class VerilatorGemminiConfig extends BoardConfig(new VerilatorGemminiParams)
 
 class ZCU102NVDLAParams extends ZCU102 with NVDLAParams with RAMInit {
@@ -64,5 +61,6 @@ class ZCU102NVDLAParams extends ZCU102 with NVDLAParams with RAMInit {
   override val RAMSize = 0x20000000L
   override val BootROMHang = RAMBase
 }
-
 class ZCU102NVDLAConfig extends BoardConfig(new ZCU102NVDLAParams)
+class VerilatorNVDLAParams extends ZCU102NVDLAParams with DMIDebug
+class VerilatorNVDLAConfig extends BoardConfig(new VerilatorNVDLAParams)
