@@ -12,7 +12,8 @@ all: $(emu) $(emu_debug)
 
 verilog := \
 	$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).v \
-	$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).behav_srams.v
+	$(VERILATOR_BUILD)/$(PROJECT).$(CONFIG).behav_srams.v \
+	$(RESOURCES)/*.v
 
 rocket_cxxsrc := SimDTM SimJTAG remote_bitbang emulator
 testchipip_cxxsrc := SimUART uart
@@ -57,7 +58,7 @@ verilator/verilator-$(VERILATOR_VERSION).tar.gz:
 verilator: $(INSTALLED_VERILATOR)
 
 # Run Verilator to produce a fast binary to emulate this circuit.
-VERILATOR := $(INSTALLED_VERILATOR) --cc --exe
+VERILATOR := $(INSTALLED_VERILATOR) --cc --exe -Wno-fatal
 VERILATOR_THREADS ?= 32
 VERILATOR_FLAGS := --top-module $(MODEL) \
 	+define+PRINTF_COND=\$$c\(\"verbose\",\"\&\&\"\,\"done_reset\"\) \
