@@ -2,8 +2,8 @@ JOBS = 20
 ROCKET_DIR ?= $(BASE_DIR)/rocket-chip
 TESTCHIPIP_DIR = $(BASE_DIR)/testchipip
 PROJECT ?= zynqmp
-TOP_MODULE ?= TVMEvaluator
-CONFIG ?= ZCU102GemminiConfig
+TOP_MODULE ?= RocketTop
+CONFIG ?= MidgardVerilatorConfig
 
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build
@@ -43,7 +43,6 @@ verilator:
 	$(SBT) "runMain firrtl.stage.FirrtlMain -i $< -o $@ -X verilog"
 
 clean:
-	$(MAKE) -C $(BOOTROM) clean
 	rm -rf build/*
 
 .PHONY:  all clean

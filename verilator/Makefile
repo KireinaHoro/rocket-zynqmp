@@ -1,7 +1,4 @@
-# check RISCV environment variable
-ifndef RISCV
-$(error Please set environment variable RISCV. Please take a look at README)
-endif
+RISCV ?= /opt/riscv
 
 VERILATOR_BUILD := $(BUILD)/verilator
 MODEL ?= TestHarness
