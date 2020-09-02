@@ -45,15 +45,17 @@ trait EdgeBoard extends Params {
   val NBreakpoints = 4 // # Hardware breakpoints
 
   override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
-  override val CoreConfig = new WithNBigCores(2)
-  override val AuxConfig = Common.uart ++ Common.pwm ++ Common.l2cache
+  override val CoreConfig = new WithNBigCores(1)
+
+  protected val aux = Common.uart ++ Common.l2cache ++ new WithNonblockingL1(nMSHRs = 2)
+  override val AuxConfig = aux ++ Common.pwm
 }
 class EdgeBoardParams extends EdgeBoard with RAMInit
 class EdgeBoardConfig extends BoardConfig(new EdgeBoardParams)
 object MidgardVerilatorParams extends EdgeBoardParams with DMIDebug {
-  // single core, no LLC, no PWM
-  override val CoreConfig = new WithNBigCores(1)
-  override val AuxConfig = Common.uart
+  // no PWMs needed for Verilator
+  override val DebugConfig = Parameters.empty
+  override val AuxConfig = aux
 }
 class MidgardVerilatorConfig extends BoardConfig(MidgardVerilatorParams)
 
