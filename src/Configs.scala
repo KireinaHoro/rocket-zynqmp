@@ -3,106 +3,74 @@ package zynqmp
 import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy.{LazyModule, ValName}
+import freechips.rocketchip.diplomacy.DTSTimebase
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
 import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 
-trait RAMInit extends Params {
-  override val BootROMHang = RAMBase
-}
+case object MemBaseKey extends Field[Long]
+case object ResetKey extends Field[Long]
 
-trait DMIDebug extends Params {
-  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new Config((site, here, up) => {
-    case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
-  })
-}
-
-object Common {
-  val uart = new Config((_, _, _) => {
-    case PeripheryUARTKey => List(
-      UARTParams(address = 0x10010000),
-      UARTParams(address = 0x10011000),
-    )
-  })
-  // beware address conflict with UART!
-  val pwm = new Config((_, _, _) => {
-    case PeripheryPWMKey => List(
-      PWMParams(address = 0x10020000),
-      PWMParams(address = 0x10021000),
-    )
-  })
-  val l2cache = new WithInclusiveCache
-}
-
-trait EdgeBoard extends Params {
-  override val RAMBase = 0x40000000L // High 1G
-  override val RAMSize = 0x3ff00000L // 1 GiB - PMU reserved
-  override val MMIOBase = 0xe0000000L // ZynqMP Peripherals
-  val NInterrupts = 1 // AXI IntC
-  val SystemFreq = 100000000L // 100 MHz
-  val NBreakpoints = 4 // # Hardware breakpoints
-
-  override val DebugConfig = new WithNBreakpoints(NBreakpoints) ++ new WithJtagDTM
-  override val CoreConfig = new WithNBigCores(1)
-
-  protected val aux = Common.uart ++ Common.l2cache ++ new WithNonblockingL1(nMSHRs = 2)
-  override val AuxConfig = aux ++ Common.pwm
-}
-class EdgeBoardParams extends EdgeBoard with RAMInit
-class EdgeBoardConfig extends BoardConfig(new EdgeBoardParams)
-object MidgardVerilatorParams extends EdgeBoardParams with DMIDebug {
-  // no PWMs needed for Verilator
-  override val DebugConfig = Parameters.empty
-  override val AuxConfig = aux
-}
-class MidgardVerilatorConfig extends BoardConfig(MidgardVerilatorParams)
-
-abstract class Params {
-  val RAMBase: Long = 0x80000000L
-  val RAMSize: Long = 0x10000000L
-  val MMIOBase: Long = 0x60000000L
-  val MMIOSize: Long = 0x20000000L
-  val BootROMBase: Long = 0x10000
-  val BootROMSize: Int = 0x2000
-  val BootROMHang: Long = 0x10000
-  val SystemFreq: Long
-  val NInterrupts: Int
-  val NBreakpoints: Int
-
-  val CoreConfig: Parameters = new WithNBigCores(1)
-  val DebugConfig: Parameters = Parameters.empty
-  val AuxConfig: Parameters = Parameters.empty
-}
-
-class OverridingConfig[+T <: Params](params: T) extends Config((site, here, up) => {
-  // BootROM
-  case BootROMParams => BootROMParams(
-    address = params.BootROMBase,
-    size = params.BootROMSize,
-    hang = params.BootROMHang, // _start in bootrom
-    contentFileName = s"./bootrom/bootrom.rv${site(XLen)}.img")
-  // RAM
+class WithSystemMemory(base: Long = 0x80000000L, size: Long = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
-    master = x.master.copy(idBits = 6, base = params.RAMBase, size = params.RAMSize)))
-  case ExtBus => up(ExtBus, site).map(_.copy(idBits = 6, base = params.MMIOBase, size = params.MMIOSize))
-  // Frequency in DTS
-  case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(params.SystemFreq))
-  case RocketTilesKey => up(RocketTilesKey, site) map { r =>
-    r.copy(core = r.core.copy(bootFreqHz = BigInt(params.SystemFreq)))
-  }
+    master = x.master.copy(idBits = 6, base = base, size = size)))
+  case MemBaseKey => base
 })
 
-class BoardConfig[+T <: Params](params: T) extends Config(new WithoutTLMonitors ++
-  params.AuxConfig ++
-  params.DebugConfig ++
-  params.CoreConfig ++
-  new OverridingConfig(params) ++
+class WithSystemMMIO(base: Long = 0x60000000L, size: Long = 0x20000000L) extends Config((site, here, up) => {
+  case ExtBus => up(ExtBus, site).map(_.copy(idBits = 6, base = base, size = size))
+})
+
+class WithMemReset extends Config((site, here, up) => {
+  case ResetKey => up(MemBaseKey, site)
+})
+
+class SystemPresets(systemFreq: Long = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
+  case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
+  case RocketTilesKey => up(RocketTilesKey, site) map { r =>
+    r.copy(core = r.core.copy(bootFreqHz = BigInt(systemFreq)))
+  }
+  case DTSTimebase => systemFreq
+  case NExtTopInterrupts => nInterrupts
+})
+
+class SystemPeripherals extends Config((_, _, _) => {
+  case PeripheryUARTKey => List(
+    UARTParams(address = 0x10010000),
+    UARTParams(address = 0x10011000),
+  )
+  case PeripheryPWMKey => List(
+    PWMParams(address = 0x10020000),
+    PWMParams(address = 0x10021000),
+  )
+})
+
+class BaseSystemConfig extends Config(
+  new WithMemReset ++
+  new SystemPeripherals ++
+  new SystemPresets() ++
+  new WithoutTLMonitors ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
-  new WithTimebase(params.SystemFreq) ++
   new WithDTS("freechips,rocketchip-jsteward", Nil) ++
-  new WithNExtTopInterrupts(params.NInterrupts) ++
   new BaseSubsystemConfig()
+)
+
+class WithBoardDebug extends Config(new WithNBreakpoints(4) ++ new WithJtagDTM)
+class WithVerilatorDebug extends Config((site, here, up) => {
+  case ExportDebug => up(ExportDebug, site).copy(protocols = Set(JTAG))
+})
+
+class EdgeBoardConfig extends Config(
+  new WithBoardDebug ++
+  new WithSystemMemory(0x40000000L, 0x3ff00000L) ++ // high 1G of PS DDR
+  new WithSystemMMIO(base = 0xe0000000L) ++ // ZynqMP peripherals
+  new WithNBigCores(1) ++
+  new BaseSystemConfig
+)
+
+class MidgardVerilatorConfig extends Config(
+  new WithVerilatorDebug ++
+  new EdgeBoardConfig
 )

@@ -1,16 +1,16 @@
 package zynqmp
 
+import zynqmp._
+
 import chisel3._
 import freechips.rocketchip.config.Parameters
-import freechips.rocketchip.devices.tilelink._
-import freechips.rocketchip.diplomacy.LazyModule
+import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
 import sifive.blocks.devices.pwm.{HasPeripheryPWM, HasPeripheryPWMModuleImp}
 import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
 
-class EdgeBoardTop(implicit p: Parameters) extends BoardTop(new EdgeBoardParams)
-class BoardTop(params: Params)(implicit val p: Parameters) extends Module {
+class EdgeBoardTop(implicit val p: Parameters) extends Module {
   val target = Module(LazyModule(new RocketTop).module)
 
   require(target.mem_axi4.size == 1)
@@ -24,7 +24,7 @@ class BoardTop(params: Params)(implicit val p: Parameters) extends Module {
   val pwmBundle = target.pwm
 
   val io = IO(new Bundle {
-    val interrupts = Input(UInt(params.NInterrupts.W))
+    val interrupts = Input(p(NExtTopInterrupts).U)
     val mem_axi4 = memBundle.cloneType
     val mmio_axi4 = mmioBundle.cloneType
     val jtag = Flipped(jtagBundle.jtag.cloneType)
@@ -58,7 +58,6 @@ class BoardTop(params: Params)(implicit val p: Parameters) extends Module {
 }
 
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
-  with HasHierarchicalBusTopology
   with HasAsyncExtInterrupts
   with HasPeripheryUART
   with HasPeripheryPWM
@@ -66,7 +65,7 @@ class RocketTop(implicit p: Parameters) extends RocketSubsystem
   with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModuleImp(this)
 
-  def resetVector = p(BootROMParams).hang
+  setResetVector(this)
 }
 
 class RocketTopModuleImp[+L <: RocketTop](outer: L) extends RocketSubsystemModuleImp(outer)
@@ -74,11 +73,7 @@ class RocketTopModuleImp[+L <: RocketTop](outer: L) extends RocketSubsystemModul
   with HasExtInterruptsModuleImp
   with HasPeripheryUARTModuleImp
   with HasPeripheryPWMModuleImp
-  with HasResetVectorWire
   with DontTouch {
   lazy val mem_axi4 = outer.mem_axi4
   lazy val mmio_axi4 = outer.mmio_axi4
-
-  println(f"global reset vector at 0x${outer.resetVector}%x")
-  global_reset_vector := outer.resetVector.U
 }
