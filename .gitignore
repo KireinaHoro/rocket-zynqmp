@@ -1,4 +1,5 @@
 build
 out
 .idea
+.idea_modules
 gemmini_params.h
