@@ -1,5 +1,4 @@
 build
-target
-lib
+out
 .idea
 gemmini_params.h

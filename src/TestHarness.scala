@@ -27,8 +27,9 @@ class TestHarness(implicit p: Parameters) extends Module {
   SimAXIMem.connectMem(ldut)
 
   // UART - only connect the first one
-  // baud rate 15M
-  val uartDpi = Module(new UARTAdapter(0, 15000000))
+  // baud rate 15M, frequency 100M
+  val div = (100000000 / 15000000).toInt
+  val uartDpi = Module(new UARTAdapter(0, div))
   uartDpi.io.uart <> dut.uart.head
   dut.uart(1).rxd := 0.U
 }
