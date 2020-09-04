@@ -51,7 +51,7 @@ class BaseSystemConfig extends Config(
 
 class WithBoardDebug extends Config(new WithNBreakpoints(4) ++ new WithJtagDTM)
 class WithVerilatorDebug extends Config((site, here, up) => {
-  case ExportDebug => up(ExportDebug, site).copy(protocols = Set(JTAG))
+  case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
 })
 
 class EdgeBoardConfig extends Config(
