@@ -9,27 +9,19 @@ import freechips.rocketchip.tile._
 import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
 
-case object MemBaseKey extends Field[Long]
-case object ResetKey extends Field[Long]
-
-class WithSystemMemory(base: Long = 0x80000000L, size: Long = 0x10000000L) extends Config((site, here, up) => {
+class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
     master = x.master.copy(idBits = 6, base = base, size = size)))
-  case MemBaseKey => base
 })
 
-class WithSystemMMIO(base: Long = 0x60000000L, size: Long = 0x20000000L) extends Config((site, here, up) => {
+class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) extends Config((site, here, up) => {
   case ExtBus => up(ExtBus, site).map(_.copy(idBits = 6, base = base, size = size))
 })
 
-class WithMemReset extends Config((site, here, up) => {
-  case ResetKey => up(MemBaseKey, site)
-})
-
-class SystemPresets(systemFreq: Long = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
+class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
   case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
   case RocketTilesKey => up(RocketTilesKey, site) map { r =>
-    r.copy(core = r.core.copy(bootFreqHz = BigInt(systemFreq)))
+    r.copy(core = r.core.copy(bootFreqHz = systemFreq))
   }
   case DTSTimebase => systemFreq
   case NExtTopInterrupts => nInterrupts
@@ -47,7 +39,7 @@ class SystemPeripherals extends Config((_, _, _) => {
 })
 
 class BaseSystemConfig extends Config(
-  new WithMemReset ++
+  new WithCoherentBusTopology ++
   new SystemPeripherals ++
   new SystemPresets() ++
   new WithoutTLMonitors ++
