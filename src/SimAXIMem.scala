@@ -1,6 +1,7 @@
 package zynqmp
 
 import chisel3._
+import freechips.rocketchip.amba._
 import freechips.rocketchip.amba.axi4._
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.diplomacy._
@@ -9,7 +10,10 @@ import freechips.rocketchip.subsystem.{CanHaveMasterAXI4MMIOPort, CanHaveMasterA
 /** Memory with AXI port for use in elaboratable test harnesses. */
 class SimAXIMem(edge: AXI4EdgeParameters, base: BigInt, size: BigInt)(implicit p: Parameters) extends SimpleLazyModule {
   val node = AXI4MasterNode(List(edge.master))
-  val srams = AddressSet.misaligned(base, size).map { aSet => LazyModule(new AXI4RAM(aSet, beatBytes = edge.bundle.dataBits / 8)) }
+  val srams = AddressSet.misaligned(base, size).map { aSet => LazyModule(new AXI4RAM(
+    aSet,
+    beatBytes = edge.bundle.dataBits / 8,
+    wcorrupt = edge.slave.requestKeys.contains(AMBACorrupt))) }
   val xbar = AXI4Xbar()
   srams.foreach { s => s.node := AXI4Buffer() := AXI4Fragmenter() := xbar }
   xbar := node
