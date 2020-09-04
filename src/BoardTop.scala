@@ -1,9 +1,9 @@
 package zynqmp
 
 import zynqmp._
-
 import chisel3._
 import freechips.rocketchip.config.Parameters
+import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
@@ -11,45 +11,48 @@ import sifive.blocks.devices.pwm.{HasPeripheryPWM, HasPeripheryPWMModuleImp}
 import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
 
 class EdgeBoardTop(implicit val p: Parameters) extends Module {
-  val target = Module(LazyModule(new RocketTop).module)
+  val ldut = LazyModule(new RocketTop)
+  val target = Module(ldut.module)
 
-  require(target.mem_axi4.size == 1)
-  require(target.mmio_axi4.size == 1)
+  require(ldut.mem_axi4.size == 1)
+  require(ldut.mmio_axi4.size == 1)
   require(target.debug.head.systemjtag.size == 1)
 
-  val memBundle = target.mem_axi4.head
-  val mmioBundle = target.mmio_axi4.head
-  val jtagBundle = target.debug.head.systemjtag.head
-  val uartBundle = target.uart
-  val pwmBundle = target.pwm
+  val mem = ldut.mem_axi4.head
+  val mmio = ldut.mmio_axi4.head
+  val dutJtag = target.debug.get.systemjtag.get
+  val uart = target.uart
+  val pwm = target.pwm
 
   val io = IO(new Bundle {
-    val interrupts = Input(p(NExtTopInterrupts).U)
-    val mem_axi4 = memBundle.cloneType
-    val mmio_axi4 = mmioBundle.cloneType
-    val jtag = Flipped(jtagBundle.jtag.cloneType)
-    val uart0 = uartBundle.head.cloneType
-    val uart1 = uartBundle.head.cloneType
-    val pwm0 = pwmBundle.head.cloneType
-    val pwm1 = pwmBundle.head.cloneType
+    val interrupts = Input(UInt(p(NExtTopInterrupts).W))
+    val mem_axi4 = mem.cloneType
+    val mmio_axi4 = mmio.cloneType
+    val jtag = Flipped(dutJtag.jtag.cloneType)
+    val uart0 = uart.head.cloneType
+    val uart1 = uart.head.cloneType
+    val pwm0 = pwm.head.cloneType
+    val pwm1 = pwm.head.cloneType
   })
 
-  io.uart0 <> uartBundle(0)
-  io.uart1 <> uartBundle(1)
+  io.uart0 <> uart(0)
+  io.uart1 <> uart(1)
 
-  io.pwm0 <> pwmBundle(0)
-  io.pwm1 <> pwmBundle(1)
+  io.pwm0 <> pwm(0)
+  io.pwm1 <> pwm(1)
 
   // AXI ports
-  io.mem_axi4 <> memBundle
-  io.mmio_axi4 <> mmioBundle
+  io.mem_axi4 <> mem
+  io.mmio_axi4 <> mmio
 
   // JTAG
-  io.jtag <> jtagBundle.jtag
-  jtagBundle.reset := target.reset
-  jtagBundle.mfr_id := 0x489.U(11.W)
-  jtagBundle.part_number := 0.U(16.W)
-  jtagBundle.version := 2.U(4.W)
+  Debug.connectDebugClockAndReset(target.debug, clock)
+  target.resetctrl map { _.hartIsInReset.map(_ := reset) }
+  io.jtag <> dutJtag.jtag
+  dutJtag.reset := target.reset
+  dutJtag.mfr_id := 0x489.U(11.W)
+  dutJtag.part_number := 0.U(16.W)
+  dutJtag.version := 2.U(4.W)
 
   // interrupts
   target.interrupts := io.interrupts
@@ -73,7 +76,4 @@ class RocketTopModuleImp[+L <: RocketTop](outer: L) extends RocketSubsystemModul
   with HasExtInterruptsModuleImp
   with HasPeripheryUARTModuleImp
   with HasPeripheryPWMModuleImp
-  with DontTouch {
-  lazy val mem_axi4 = outer.mem_axi4
-  lazy val mmio_axi4 = outer.mmio_axi4
-}
+  with DontTouch

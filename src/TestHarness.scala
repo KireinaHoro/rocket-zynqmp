@@ -44,6 +44,4 @@ class VerilatorTop(implicit p: Parameters) extends RocketSubsystem
 class VerilatorTopModuleImp[+L <: VerilatorTop](outer: L) extends RocketSubsystemModuleImp(outer)
   with HasRTCModuleImp
   with HasPeripheryUARTModuleImp
-  with DontTouch {
-  lazy val mem_axi4 = outer.mem_axi4
-}
+  with DontTouch
