@@ -7,8 +7,7 @@ import freechips.rocketchip.subsystem._
 
 package object zynqmp {
   def setResetVector(subsystem: BaseSubsystem with HasTiles)(implicit p: Parameters) {
-    // always use the first port as init base
-    val mem = p(ExtMem).head.master
+    val mem = p(ExtMem).get.master
     val resetVector = mem.base
     println(f"global reset vector at ${resetVector}%#x")
 
