@@ -2,8 +2,8 @@ JOBS = 20
 ROCKET_DIR ?= $(BASE_DIR)/rocket-chip
 TESTCHIPIP_DIR = $(BASE_DIR)/testchipip
 PROJECT ?= zynqmp
-TOP_MODULE ?= RocketTop
-CONFIG ?= MidgardVerilatorConfig
+TOP_MODULE ?= EdgeBoardTop
+CONFIG ?= EdgeBoardConfig
 
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build
@@ -14,10 +14,7 @@ SHELL := /bin/bash
 
 export
 
-JAVA ?= java
-#SBT ?= $(JAVA) -Xmx2G -Xss8M -jar $(ROCKET_DIR)/sbt-launch.jar
-SBT ?= sbt
-export SBT_OPTS = -Xmx2G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=2G -Xss2M  -Duser.timezone=GMT
+MILL ?= mill -j 0
 
 .PHONY: all
 all: verilog verilator
@@ -30,7 +27,7 @@ $(BOOTROM_IMG):
 
 $(BUILD)/$(PROJECT).$(CONFIG).fir:
 	mkdir -p $(@D)
-	$(SBT) "runMain freechips.rocketchip.system.Generator $(BUILD) $(PROJECT) $(TOP_MODULE) $(PROJECT) $(CONFIG)"
+	$(MILL) system.genFirrtl $(TOP_MODULE) $(CONFIG)
 
 .PHONY: verilog
 verilog: $(OUT_VERILOG)
@@ -40,7 +37,7 @@ verilator:
 	$(MAKE) -C verilator/
 
 %.v: %.fir
-	$(SBT) "runMain firrtl.stage.FirrtlMain -i $< -o $@ -X verilog"
+	$(MILL) system.genVerilog $(TOP_MODULE) $(CONFIG)
 
 clean:
 	rm -rf build/*
