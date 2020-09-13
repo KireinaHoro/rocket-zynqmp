@@ -2,7 +2,7 @@ RISCV ?= /opt/riscv
 
 VERILATOR_BUILD := $(BUILD)/verilator
 MODEL ?= TestHarness
-SIM_CONFIG ?= MidgardVerilatorConfig
+SIM_CONFIG ?= VerilatorConfig
 VLSI_MEM_GEN := $(ROCKET_DIR)/scripts/vlsi_mem_gen
 
 emu = $(VERILATOR_BUILD)/emulator-$(PROJECT)-$(SIM_CONFIG)

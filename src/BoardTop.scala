@@ -10,7 +10,7 @@ import freechips.rocketchip.util._
 import sifive.blocks.devices.pwm.{HasPeripheryPWM, HasPeripheryPWMModuleImp}
 import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
 
-class EdgeBoardTop(implicit val p: Parameters) extends Module {
+class ZCU102Top(implicit val p: Parameters) extends Module {
   val ldut = LazyModule(new RocketTop)
   val target = Module(ldut.module)
 

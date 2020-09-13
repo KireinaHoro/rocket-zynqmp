@@ -8,6 +8,7 @@ import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
 import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
 import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
+import gemmini._
 
 class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
@@ -54,15 +55,16 @@ class WithVerilatorDebug extends Config((site, here, up) => {
   case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
 })
 
-class EdgeBoardConfig extends Config(
+class ZCU102Config extends Config(
+  new DefaultGemminiConfig ++
   new WithBoardDebug ++
-  new WithSystemMemory(0x40000000L, 0x3ff00000L) ++ // high 1G of PS DDR
+  new WithSystemMemory(0x800000000L, 0x80000000L) ++ // high 2G of PS DDR
   new WithSystemMMIO(base = 0xe0000000L) ++ // ZynqMP peripherals
   new WithNBigCores(1) ++
   new BaseSystemConfig
 )
 
-class MidgardVerilatorConfig extends Config(
+class VerilatorConfig extends Config(
   new WithVerilatorDebug ++
-  new EdgeBoardConfig
+  new ZCU102Config
 )

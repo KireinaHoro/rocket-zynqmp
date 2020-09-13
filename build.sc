@@ -63,8 +63,11 @@ object testchipip extends RocketModule with SbtModule {
 object `inclusive-cache` extends RocketModule {
   override def millSourcePath = super.millSourcePath / 'design / 'craft / 'inclusivecache
 }
-object gemmini_conv extends RocketModule {
-  override def millSourcePath = super.millSourcePath / 'src
+object gemmini_conv extends RocketModule with SbtModule {
+  override def moduleDeps = super.moduleDeps ++ Seq(testchipip)
+  override def ivyDeps = super.ivyDeps() ++ Seq(
+    ivy"edu.berkeley.cs::chisel-iotesters:1.4.2"
+  )
 }
 
 object system extends RocketModule {
