@@ -63,11 +63,14 @@ object testchipip extends RocketModule with SbtModule {
 object `inclusive-cache` extends RocketModule {
   override def millSourcePath = super.millSourcePath / 'design / 'craft / 'inclusivecache
 }
+object gemmini_conv extends RocketModule {
+  override def millSourcePath = super.millSourcePath / 'src
+}
 
 object system extends RocketModule {
   // use project root as source root
   override def millSourcePath = super.millSourcePath / os.up
-  override def moduleDeps = super.moduleDeps ++ Seq(testchipip, `sifive-blocks`, `inclusive-cache`)
+  override def moduleDeps = super.moduleDeps ++ Seq(testchipip, `sifive-blocks`, `inclusive-cache`, gemmini_conv)
 
   val project = "zynqmp"
   val buildDir = "build"

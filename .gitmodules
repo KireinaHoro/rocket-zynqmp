@@ -13,3 +13,6 @@
 [submodule "inclusive-cache"]
 	path = inclusive-cache
 	url = https://github.com/sifive/block-inclusivecache-sifive/
+[submodule "gemmini_conv"]
+	path = gemmini_conv
+	url = git@github.com:KireinaHoro/gemmini_conv
