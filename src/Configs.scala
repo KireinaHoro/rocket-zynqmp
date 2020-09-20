@@ -45,7 +45,7 @@ class BaseSystemConfig extends Config(
   new WithoutTLMonitors ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
-  new WithDTS("freechips,rocketchip-jsteward", Nil) ++
+  new WithDTS("jsteward,uhf-rfid-ctrl", Nil) ++
   new BaseSubsystemConfig()
 )
 
@@ -54,7 +54,7 @@ class WithVerilatorDebug extends Config((site, here, up) => {
   case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
 })
 
-class EdgeBoardConfig extends Config(
+class UhfRfidConfig extends Config(
   new WithBoardDebug ++
   new WithSystemMemory(0x40000000L, 0x3ff00000L) ++ // high 1G of PS DDR
   new WithSystemMMIO(base = 0xe0000000L) ++ // ZynqMP peripherals
@@ -62,7 +62,7 @@ class EdgeBoardConfig extends Config(
   new BaseSystemConfig
 )
 
-class MidgardVerilatorConfig extends Config(
+class VerilatorConfig extends Config(
   new WithVerilatorDebug ++
-  new EdgeBoardConfig
+  new UhfRfidConfig
 )
