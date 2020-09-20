@@ -6,8 +6,8 @@ import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy.DTSTimebase
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.tile._
-import sifive.blocks.devices.pwm.{PWMParams, PeripheryPWMKey}
-import sifive.blocks.devices.uart.{PeripheryUARTKey, UARTParams}
+import sifive.blocks.devices.uart._
+import sifive.blocks.devices.spi._
 
 class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
@@ -32,10 +32,12 @@ class SystemPeripherals extends Config((_, _, _) => {
     UARTParams(address = 0x10010000),
     UARTParams(address = 0x10011000),
   )
-  case PeripheryPWMKey => List(
-    PWMParams(address = 0x10020000),
-    PWMParams(address = 0x10021000),
-  )
+  case PeripherySPIKey => List(SPIParams(
+    rAddress = 0x10020000,
+    csWidth = 32))
+  case PeripherySPIFlashKey => List(SPIFlashParams(
+    rAddress = 0x10021000,
+    fAddress = 0x60000000))
 })
 
 class BaseSystemConfig extends Config(

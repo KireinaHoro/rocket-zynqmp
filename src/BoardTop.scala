@@ -7,8 +7,8 @@ import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
-import sifive.blocks.devices.pwm.{HasPeripheryPWM, HasPeripheryPWMModuleImp}
-import sifive.blocks.devices.uart.{HasPeripheryUART, HasPeripheryUARTModuleImp}
+import sifive.blocks.devices.spi._
+import sifive.blocks.devices.uart._
 
 class RfidTop(implicit val p: Parameters) extends Module {
   val ldut = LazyModule(new RocketTop)
@@ -22,7 +22,8 @@ class RfidTop(implicit val p: Parameters) extends Module {
   val mmio = ldut.mmio_axi4.head
   val dutJtag = target.debug.get.systemjtag.get
   val uart = target.uart
-  val pwm = target.pwm
+  val spi = target.spi
+  val qspi = target.qspi
 
   val io = IO(new Bundle {
     val interrupts = Input(UInt(p(NExtTopInterrupts).W))
@@ -31,19 +32,20 @@ class RfidTop(implicit val p: Parameters) extends Module {
     val jtag = Flipped(dutJtag.jtag.cloneType)
     val uart0 = uart.head.cloneType
     val uart1 = uart.head.cloneType
-    val pwm0 = pwm.head.cloneType
-    val pwm1 = pwm.head.cloneType
+    val spi0 = spi.head.cloneType
+    val qspi0 = qspi.head.cloneType
   })
 
   io.uart0 <> uart(0)
   io.uart1 <> uart(1)
 
-  io.pwm0 <> pwm(0)
-  io.pwm1 <> pwm(1)
-
   // AXI ports
   io.mem_axi4 <> mem
   io.mmio_axi4 <> mmio
+
+  // SPI and QSPI
+  io.spi0 <> spi.head
+  io.qspi0 <> qspi.head
 
   // JTAG
   Debug.connectDebugClockAndReset(target.debug, clock)
@@ -63,7 +65,8 @@ class RfidTop(implicit val p: Parameters) extends Module {
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
   with HasAsyncExtInterrupts
   with HasPeripheryUART
-  with HasPeripheryPWM
+  with HasPeripherySPI
+  with HasPeripherySPIFlash
   with CanHaveMasterAXI4MemPort
   with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModuleImp(this)
@@ -75,5 +78,6 @@ class RocketTopModuleImp[+L <: RocketTop](outer: L) extends RocketSubsystemModul
   with HasRTCModuleImp
   with HasExtInterruptsModuleImp
   with HasPeripheryUARTModuleImp
-  with HasPeripheryPWMModuleImp
+  with HasPeripherySPIModuleImp
+  with HasPeripherySPIFlashModuleImp
   with DontTouch
