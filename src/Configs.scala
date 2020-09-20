@@ -58,8 +58,8 @@ class WithVerilatorDebug extends Config((site, here, up) => {
 
 class UhfRfidConfig extends Config(
   new WithBoardDebug ++
-  new WithSystemMemory(0x40000000L, 0x3ff00000L) ++ // high 1G of PS DDR
-  new WithSystemMMIO(base = 0xe0000000L) ++ // ZynqMP peripherals
+  new WithSystemMemory(0x80000000L, 0x80000000L) ++ // 2GB DRAM on board
+  new WithSystemMMIO(base = 0x40000000L) ++ // to avoid conflict with SPI XIP
   new WithNBigCores(1) ++
   new BaseSystemConfig
 )
