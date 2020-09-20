@@ -34,11 +34,11 @@ VERILATOR_SRCDIR ?= verilator/src/verilator-$(VERILATOR_VERSION)
 VERILATOR_TARGET := $(abspath verilator/install/bin/verilator_bin)
 INSTALLED_VERILATOR ?= $(VERILATOR_TARGET)
 $(VERILATOR_TARGET): $(VERILATOR_SRCDIR)/bin/verilator_bin
-	$(MAKE) -C $(VERILATOR_SRCDIR) installbin installdata
+	$(MAKE) -C $(VERILATOR_SRCDIR) installbin installdata -j$(shell nproc)
 	touch $@
 
 $(VERILATOR_SRCDIR)/bin/verilator_bin: $(VERILATOR_SRCDIR)/Makefile
-	$(MAKE) -C $(VERILATOR_SRCDIR) verilator_bin
+	$(MAKE) -C $(VERILATOR_SRCDIR) verilator_bin -j$(shell nproc)
 	touch $@
 
 $(VERILATOR_SRCDIR)/Makefile: $(VERILATOR_SRCDIR)/configure
