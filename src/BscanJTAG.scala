@@ -3,6 +3,8 @@ package zynqmp
 import chisel3._
 import chisel3.util._
 import chisel3.experimental.{ExtModule, chiselName}
+import freechips.rocketchip.devices.debug.SystemJTAGIO
+import freechips.rocketchip.jtag.JTAGIO
 
 class BUFGCE extends ExtModule {
   val O = IO(Output(Bool()))
@@ -22,6 +24,24 @@ class BSCANE2 extends ExtModule(Map("JTAG_CHAIN" -> 4)) {
   val TDI = IO(Output(Bool()))
   val TMS = IO(Output(Bool()))
   val UPDATE = IO(Output(Bool()))
+}
+
+object BscanJTAG {
+  def connectJTAG(dutJtag: SystemJTAGIO, chainPosition: Int = 0)(implicit reset: Reset) = {
+    val bscan = Module(new BscanJTAG(chainPosition))
+    dutJtag.jtag.TCK := bscan.tck
+    dutJtag.jtag.TDI := bscan.tdi
+    dutJtag.jtag.TMS := bscan.tms
+    dutJtag.reset := reset
+    dutJtag.mfr_id := 0x489.U(11.W)
+    dutJtag.part_number := 0.U(16.W)
+    dutJtag.version := 2.U(4.W)
+
+    bscan.tdo := dutJtag.jtag.TDO.data
+    bscan.tdoEnable := dutJtag.jtag.TDO.driven
+
+    bscan
+  }
 }
 
 @chiselName
@@ -80,9 +100,4 @@ class BscanJTAG(chainPosition: Int = 0) extends MultiIOModule {
       )
     }
   }
-}
-
-// helper for test generating verilog
-object BscanJTAG extends App {
-  Driver.execute(args, () => new BscanJTAG(1))
 }

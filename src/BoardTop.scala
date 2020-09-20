@@ -29,7 +29,6 @@ class RfidTop(implicit val p: Parameters) extends Module {
     val interrupts = Input(UInt(p(NExtTopInterrupts).W))
     val mem_axi4 = mem.cloneType
     val mmio_axi4 = mmio.cloneType
-    val jtag = Flipped(dutJtag.jtag.cloneType)
     val uart0 = uart.head.cloneType
     val uart1 = uart.head.cloneType
     val spi0 = spi.head.cloneType
@@ -50,11 +49,8 @@ class RfidTop(implicit val p: Parameters) extends Module {
   // JTAG
   Debug.connectDebugClockAndReset(target.debug, clock)
   target.resetctrl map { _.hartIsInReset.map(_ := reset) }
-  io.jtag <> dutJtag.jtag
-  dutJtag.reset := target.reset
-  dutJtag.mfr_id := 0x489.U(11.W)
-  dutJtag.part_number := 0.U(16.W)
-  dutJtag.version := 2.U(4.W)
+
+  BscanJTAG.connectJTAG(dutJtag)(reset)
 
   // interrupts
   target.interrupts := io.interrupts
