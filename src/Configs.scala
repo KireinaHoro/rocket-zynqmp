@@ -6,6 +6,8 @@ import freechips.rocketchip.diplomacy.DTSTimebase
 import freechips.rocketchip.subsystem._
 import sifive.blocks.devices.uart._
 
+case object ResetVectorKey extends Field[BigInt]
+
 class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
     master = x.master.copy(idBits = 6, base = base, size = size)))
@@ -16,6 +18,7 @@ class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) ext
 })
 
 class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
+  case ResetVectorKey => BigInt(0x60000000L) // start of MMIO; Quad SPI XIP sits here
   case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
   case RocketTilesKey => up(RocketTilesKey, site) map { r =>
     r.copy(core = r.core.copy(bootFreqHz = systemFreq))

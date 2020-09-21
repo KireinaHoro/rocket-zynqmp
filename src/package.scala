@@ -9,7 +9,7 @@ import sifive.blocks.devices.spi._
 package object zynqmp {
   def setResetVector(subsystem: BaseSubsystem with HasTiles)(implicit p: Parameters) {
     // assume that we only have one QSPI flash
-    val resetVector = p(PeripherySPIFlashKey).head.fAddress
+    val resetVector = p(ResetVectorKey)
     println(f"global reset vector at ${resetVector}%#x")
 
     val resetVectorSourceNode = BundleBridgeSource[UInt]()
