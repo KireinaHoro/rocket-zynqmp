@@ -2,12 +2,9 @@ package zynqmp
 
 import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
-import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.diplomacy.DTSTimebase
 import freechips.rocketchip.subsystem._
-import freechips.rocketchip.tile._
 import sifive.blocks.devices.uart._
-import sifive.blocks.devices.spi._
 
 class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) extends Config((site, here, up) => {
   case ExtMem => up(ExtMem, site).map(x => x.copy(
@@ -32,18 +29,12 @@ class SystemPeripherals extends Config((_, _, _) => {
     UARTParams(address = 0x10010000),
     UARTParams(address = 0x10011000),
   )
-  case PeripherySPIKey => List(SPIParams(
-    rAddress = 0x10020000,
-    csWidth = 32))
-  case PeripherySPIFlashKey => List(SPIFlashParams(
-    rAddress = 0x10021000,
-    fAddress = 0x60000000))
 })
 
 class BaseSystemConfig extends Config(
   new WithCoherentBusTopology ++
   new SystemPeripherals ++
-  new SystemPresets() ++
+  new SystemPresets(nInterrupts = 2) ++ // two AXI SPI controllers
   new WithoutTLMonitors ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
@@ -59,7 +50,7 @@ class WithVerilatorDebug extends Config((site, here, up) => {
 class UhfRfidConfig extends Config(
   new WithBoardDebug ++
   new WithSystemMemory(0x80000000L, 0x80000000L) ++ // 2GB DRAM on board
-  new WithSystemMMIO(base = 0x40000000L) ++ // to avoid conflict with SPI XIP
+  new WithSystemMMIO() ++
   new WithNBigCores(1) ++
   new BaseSystemConfig
 )

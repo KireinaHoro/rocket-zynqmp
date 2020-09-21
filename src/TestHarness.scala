@@ -4,7 +4,6 @@ import zynqmp._
 
 import chisel3._
 import freechips.rocketchip.config.Parameters
-import freechips.rocketchip.devices.tilelink._
 import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.diplomacy.LazyModule
 import freechips.rocketchip.subsystem._

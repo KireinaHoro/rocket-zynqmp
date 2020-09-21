@@ -1,13 +1,13 @@
 package zynqmp
 
 import zynqmp._
+
 import chisel3._
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.devices.debug.Debug
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import freechips.rocketchip.util._
-import sifive.blocks.devices.spi._
 import sifive.blocks.devices.uart._
 
 class RfidTop(implicit val p: Parameters) extends Module {
@@ -22,8 +22,6 @@ class RfidTop(implicit val p: Parameters) extends Module {
   val mmio = ldut.mmio_axi4.head
   val dutJtag = target.debug.get.systemjtag.get
   val uart = target.uart
-  val spi = target.spi
-  val qspi = target.qspi
 
   val io = IO(new Bundle {
     val interrupts = Input(UInt(p(NExtTopInterrupts).W))
@@ -31,8 +29,6 @@ class RfidTop(implicit val p: Parameters) extends Module {
     val mmio_axi4 = mmio.cloneType
     val uart0 = uart.head.cloneType
     val uart1 = uart.head.cloneType
-    val spi0 = spi.head.cloneType
-    val qspi0 = qspi.head.cloneType
   })
 
   io.uart0 <> uart(0)
@@ -41,10 +37,6 @@ class RfidTop(implicit val p: Parameters) extends Module {
   // AXI ports
   io.mem_axi4 <> mem
   io.mmio_axi4 <> mmio
-
-  // SPI and QSPI
-  io.spi0 <> spi.head
-  io.qspi0 <> qspi.head
 
   // JTAG
   Debug.connectDebugClockAndReset(target.debug, clock)
@@ -61,8 +53,6 @@ class RfidTop(implicit val p: Parameters) extends Module {
 class RocketTop(implicit p: Parameters) extends RocketSubsystem
   with HasAsyncExtInterrupts
   with HasPeripheryUART
-  with HasPeripherySPI
-  with HasPeripherySPIFlash
   with CanHaveMasterAXI4MemPort
   with CanHaveMasterAXI4MMIOPort {
   override lazy val module = new RocketTopModuleImp(this)
@@ -74,6 +64,4 @@ class RocketTopModuleImp[+L <: RocketTop](outer: L) extends RocketSubsystemModul
   with HasRTCModuleImp
   with HasExtInterruptsModuleImp
   with HasPeripheryUARTModuleImp
-  with HasPeripherySPIModuleImp
-  with HasPeripherySPIFlashModuleImp
   with DontTouch

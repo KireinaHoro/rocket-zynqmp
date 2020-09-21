@@ -5,7 +5,7 @@ import freechips.rocketchip.amba._
 import freechips.rocketchip.amba.axi4._
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.diplomacy._
-import freechips.rocketchip.subsystem.{CanHaveMasterAXI4MMIOPort, CanHaveMasterAXI4MemPort, ExtMem}
+import freechips.rocketchip.subsystem.{CanHaveMasterAXI4MemPort, ExtMem}
 
 /** Memory with AXI port for use in elaboratable test harnesses. */
 class SimAXIMem(edge: AXI4EdgeParameters, base: BigInt, size: BigInt)(implicit p: Parameters) extends SimpleLazyModule {

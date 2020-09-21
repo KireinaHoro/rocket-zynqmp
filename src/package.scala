@@ -1,7 +1,7 @@
 package zynqmp
 
-import chisel3._
 import chipsalliance.rocketchip.config._
+import chisel3._
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.subsystem._
 import sifive.blocks.devices.spi._

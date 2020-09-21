@@ -1,10 +1,9 @@
 package zynqmp
 
 import chisel3._
-import chisel3.util._
 import chisel3.experimental.{ExtModule, chiselName}
+import chisel3.util._
 import freechips.rocketchip.devices.debug.SystemJTAGIO
-import freechips.rocketchip.jtag.JTAGIO
 
 class BUFGCE extends ExtModule {
   val O = IO(Output(Bool()))
