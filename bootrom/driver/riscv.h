@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+#define NELEM(x) (sizeof(x) / sizeof((x)[0]))
 
 #define uint64 uint64_t
 

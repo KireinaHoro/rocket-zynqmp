@@ -40,9 +40,9 @@
 void _assert(bool x, const char *file, int lineno);
 #define assert(x) _assert(x, __FILE__, __LINE__)
 
-#include "uart.h"
-#include "spi.h"
 #include "mem_map.h"
 #include "riscv.h"
+#include "spi.h"
+#include "uart.h"
 
 #endif

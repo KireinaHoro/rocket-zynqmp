@@ -17,7 +17,7 @@ void main(int hartid, void *dtb) {
     goto hang;
   }
 hang:
-    while (true) {
-        wfi();
-    }
+  while (true) {
+    wfi();
+  }
 }
