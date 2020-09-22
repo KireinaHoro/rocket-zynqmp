@@ -1,7 +1,6 @@
-// reserve place for bootloader sync mark and stay aligned
-#define DRAM_TOP 0x7ff00000
+#include "driver/mem_map.h"
 
-.section .text.start, "ax", @progbits
+.section .start, "ax", @progbits
 .globl _start
 _start:
   li a1, 0x2000000 // base address of clint
@@ -25,14 +24,34 @@ boot_core:
 boot_core_hart0:
   sw zero, 0(a1)     // clear the interrupt
   csrr a0, mhartid   // hartid for next level bootloader
-  li sp, DRAM_TOP - 0x10    // setup stack
+  li sp, DDR_BASE + DDR_SIZE
   mv t0, a0
   slli t0, t0, 12    // 4K stack for each hart
   sub sp, sp, t0
+
+  la t0, _real_data
+  la t1, _data_start
+  la t2, _data_end
+  sub t2, t2, t1
+relocate_data:
+  ld t3, 0(t0)
+  sd t3, 0(t1)
+  addi t0, t0, 8
+  addi t1, t1, 8
+  addi t2, t2, -8
+  bnez t2, relocate_data
+
+  la t0, _bss_start
+  la t1, _sbss_end
+zero_bss:
+  sd zero, 0(t0)
+  addi t0, t0, 8
+  bne t0, t1, zero_bss
+
   la a1, _dtb        // dtb address for next level bootloader
-  li t0, DRAM_TOP - 1  // address for MARK in bootloader.c
   sb zero, 0(t0)
-  jal bootloader
+  call main
+  tail exit
 
 .section .rodata.dtb, "a", @progbits
 .globl _dtb

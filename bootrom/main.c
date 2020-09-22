@@ -1,6 +1,6 @@
 #include "bits.h"
 
-void bootloader(int hartid, void *dtb) {
+void main(int hartid, void *dtb) {
   if (hartid == 0) {
     uart_init();
     printf(">>> Init on hart 0\n");

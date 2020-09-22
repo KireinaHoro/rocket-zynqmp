@@ -2,9 +2,9 @@
 
 #include "uart.h"
 
-volatile uint32_t *uart_base_ptr = (uint32_t *)(UART_BASE);
-
 void uart_init() {
+  volatile uint32_t *uart_base_ptr = (uint32_t *)(UART_BASE);
+
   // Enable 8 byte FIFO
   *(uart_base_ptr + UART_FCR) = 0x0081;
 
@@ -28,6 +28,8 @@ void uart_init() {
 }
 
 void uart_send(uint8_t data) {
+  volatile uint32_t *uart_base_ptr = (uint32_t *)(UART_BASE);
+
   // wait until THR empty
   while (!(*(uart_base_ptr + UART_LSR) & 0x40u))
     ;

@@ -6,12 +6,6 @@
 #include "mem_map.h"
 #include <stdint.h>
 
-#ifdef MEM_MAP_UART_BASE
-#define UART_BASE ((uint32_t)(MEM_MAP_UART_BASE | 0x1000))
-#else
-#define UART_BASE 0
-#endif
-
 // RBR: Receiver buffer register [Read, LCR[7] == 0]
 #define UART_RBR 0x0u
 
