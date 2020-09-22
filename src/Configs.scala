@@ -4,7 +4,6 @@ import freechips.rocketchip.config._
 import freechips.rocketchip.devices.debug._
 import freechips.rocketchip.diplomacy.DTSTimebase
 import freechips.rocketchip.subsystem._
-import sifive.blocks.devices.uart._
 
 case object ResetVectorKey extends Field[BigInt]
 
@@ -18,7 +17,7 @@ class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) ext
 })
 
 class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
-  case ResetVectorKey => BigInt(0x60000000L) // start of MMIO; Quad SPI XIP sits here
+  case ResetVectorKey => BigInt(0x61000000L) // High 128Mbit of XIP SPI
   case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
   case RocketTilesKey => up(RocketTilesKey, site) map { r =>
     r.copy(core = r.core.copy(bootFreqHz = systemFreq))
@@ -27,17 +26,9 @@ class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extend
   case NExtTopInterrupts => nInterrupts
 })
 
-class SystemPeripherals extends Config((_, _, _) => {
-  case PeripheryUARTKey => List(
-    UARTParams(address = 0x10010000),
-    UARTParams(address = 0x10011000),
-  )
-})
-
 class BaseSystemConfig extends Config(
   new WithCoherentBusTopology ++
-  new SystemPeripherals ++
-  new SystemPresets(nInterrupts = 2) ++ // two AXI SPI controllers
+  new SystemPresets(nInterrupts = 3) ++ // two AXI SPI controllers
   new WithoutTLMonitors ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
