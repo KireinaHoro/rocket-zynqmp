@@ -1,11 +1,7 @@
 // code borrowed from xv6-riscv with modifications for machine mode
 
-#include <stdint.h>
-
 #include "riscv.h"
-#include "myprintf.h"
-
-#define uint64 uint64_t
+#include "bits.h"
 
 // Machine Trap Cause
 static inline uint64
@@ -102,22 +98,9 @@ mcause_desc(uint64 mtval)
 void mtrapvec(void) {
     uint64 mcause = r_mcause();
     uint64 mepc = r_mepc();
-    printf("!!! Machine mode trap: mcause %p ", mcause);
-    printf("(%s)\r\n", (uint64)mcause_desc(mcause));
-    printf("    mepc=%p ", mepc);
-    printf("mtval=%p\r\n", r_mtval());
+    printf("!!! Machine mode trap: mcause %#lx (%s)\n    mepc=%#lx mtval=%#lx\n", mcause, mcause_desc(mcause), mepc, r_mtval());
 
-    printf("!!! Dumping 64 bytes after mepc...\r\n", 0);
-    hexdump((void*)mepc, 64);
-
-    for (;;);
-}
-
-// Machine-mode interrupt vector
-static inline void 
-w_mtvec(uint64 x)
-{
-  asm volatile("csrw mtvec, %0" : : "r" (x));
+    while (true) wfi();
 }
 
 void

@@ -2,6 +2,8 @@
 #define _RISCV_BITS_H
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
@@ -37,5 +39,10 @@
 
 void _assert(bool x, const char *file, int lineno);
 #define assert(x) _assert(x, __FILE__, __LINE__)
+
+#include "uart.h"
+#include "spi.h"
+#include "mem_map.h"
+#include "riscv.h"
 
 #endif
