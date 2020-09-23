@@ -17,7 +17,7 @@ class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) ext
 })
 
 class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
-  case ResetVectorKey => BigInt(0x61000000L) // High 128Mbit of XIP SPI
+  case ResetVectorKey => BigInt(0x71000000L) // High 128Mbit of XIP SPI
   case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
   case RocketTilesKey => up(RocketTilesKey, site) map { r =>
     r.copy(core = r.core.copy(bootFreqHz = systemFreq))
@@ -43,8 +43,8 @@ class WithVerilatorDebug extends Config((site, here, up) => {
 
 class UhfRfidConfig extends Config(
   new WithBoardDebug ++
-  new WithSystemMemory(0x80000000L, 0x80000000L) ++ // 2GB DRAM on board
-  new WithSystemMMIO() ++
+  new WithSystemMemory(0x70000000L, 0x90000000L) ++ // XIP + 2GB DRAM on board
+  new WithSystemMMIO(size = 0x10000000L) ++ // 0x60000000-0x70000000
   new WithNBigCores(1) ++
   new BaseSystemConfig
 )
