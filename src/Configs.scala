@@ -24,6 +24,7 @@ class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extend
   }
   case DTSTimebase => systemFreq
   case NExtTopInterrupts => nInterrupts
+  case DebugModuleKey => up(DebugModuleKey, site) map { _.copy(clockGate = false) }
 })
 
 class BaseSystemConfig extends Config(
