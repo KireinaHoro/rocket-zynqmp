@@ -87,7 +87,7 @@ static const char *mcause_desc(uint64 mtval) {
 
 // print trap information, halt
 // assumes uart is already initialized
-void mtrapvec(void) {
+void __attribute__((aligned(16))) mtrapvec(void) {
   uint64 mcause = r_mcause();
   uint64 mepc = r_mepc();
   printf("!!! Machine mode trap: mcause %#lx (%s)\n    mepc=%#lx mtval=%#lx\n",
