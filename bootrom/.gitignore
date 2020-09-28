@@ -6,3 +6,4 @@ bootrom.*
 coegen
 .gdbinit
 linker.ld
+*.swp
