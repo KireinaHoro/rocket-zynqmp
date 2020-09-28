@@ -35,7 +35,7 @@ $(driver_library): $(driver_objects)
 	ar rcs $@ $^
 
 %.elf: %.S main.c linker.ld $(driver_library)
-	$(CC) $(CFLAGS) $(driver_include) -Tlinker.ld bootrom.S main.c $(driver_library) -static -o $@
+	$(CC) $(CFLAGS) $(driver_include) -Tlinker.ld bootrom.S main.c syscalls.c $(driver_library) -static -o $@
 
 clean:
 	rm -f $(bootrom_img) *.elf $(driver_objects) $(driver_library)
