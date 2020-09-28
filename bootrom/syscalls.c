@@ -14,7 +14,7 @@ int _write(int file, char *ptr, int len) {
   for (i = 0; i < len; i++) {
     char c = *ptr++;
     if (c == '\n') {
-        uart_send('\r');
+      uart_send('\r');
     }
     uart_send(c);
   }
