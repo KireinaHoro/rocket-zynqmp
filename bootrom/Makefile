@@ -7,8 +7,7 @@ driver_include	:= -I$(driver_subdir)
 driver_objects	:= $(driver_sources:c=o)
 driver_library	:= driver.a
 
-HOST_CXX=g++
-TRIPLE=/opt/riscv/bin/riscv64-unknown-elf-
+TRIPLE ?= /opt/riscv/rv64imac/bin/riscv64-unknown-elf-
 CC=$(TRIPLE)gcc
 CPP=$(TRIPLE)cpp
 CFLAGS_RV64=-g -Wall -Werror -nostartfiles -fno-strict-aliasing \
