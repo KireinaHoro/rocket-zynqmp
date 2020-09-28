@@ -24,7 +24,7 @@ boot_core:
 boot_core_hart0:
   sw zero, 0(a1)     // clear the interrupt
   csrr a0, mhartid   // hartid for next level bootloader
-  li sp, DDR_BASE + DDR_SIZE
+  li sp, STACK_TOP
   mv t0, a0
   slli t0, t0, 12    // 4K stack for each hart
   sub sp, sp, t0
@@ -36,7 +36,7 @@ boot_core_hart0:
   call memcpy
 
   la a0, _bss_start
-  la a2, _sbss_end
+  la a2, _bss_end
   sub a2, a2, a0
   li a1, 0
   call memset

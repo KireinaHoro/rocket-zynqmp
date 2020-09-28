@@ -9,10 +9,12 @@ SECTIONS
     .start : { *(.start) }
     .text       : {
         *(.text .text.*)
+        *(.init_array*)
         . = ALIGN(8);
     }
     .rodata     : {
         *(.rodata .rodata.*)
+        . = ALIGN(8);
         *(.srodata .srodata.*)
         . = ALIGN(8);
     }
@@ -23,8 +25,8 @@ SECTIONS
     .data       : AT(_real_data) {
         PROVIDE(_data_start = .);
         *(.data .data.*)
-        *(.readmostly.data)
-        *(*.data)
+        . = ALIGN(8);
+        *(.sdata .sdata.*)
         . = ALIGN(8);
         PROVIDE(_data_end = .);
     }
@@ -32,20 +34,12 @@ SECTIONS
         PROVIDE(_bss_start = .);
         *(.bss .bss.*)
         . = ALIGN(8);
-    }
-    .sbss       : {
         *(.sbss .sbss.*)
         . = ALIGN(8);
-        PROVIDE(_sbss_end = .);
+        PROVIDE(_bss_end = .);
     }
 
     /* heap */
     . = ALIGN(0x1000);
     PROVIDE(_heap_start = .);
-    
-    /* stack */
-    . = DDR_BASE + DDR_SIZE - 0x10000;
-    PROVIDE(_stack_end = .);
-    . = DDR_BASE + DDR_SIZE;
-    PROVIDE(_stack_top = .);
 }
