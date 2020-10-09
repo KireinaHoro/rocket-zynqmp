@@ -29,11 +29,13 @@ boot_core_hart0:
   slli t0, t0, 12    // 4K stack for each hart
   sub sp, sp, t0
 
+  la a1, _real_data
+  beqz a1, skip_relocate
   la a0, _data_start
   la a2, _data_end
   sub a2, a2, a0
-  la a1, _real_data
   call memcpy
+skip_relocate:
 
   la a0, _bss_start
   la a2, _bss_end
