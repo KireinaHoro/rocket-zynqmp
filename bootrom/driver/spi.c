@@ -55,6 +55,9 @@ void spi_recv_multi(uint8_t *dat, uint8_t n) {
     *(dat++) = *(spi_base_ptr + SPI_DRR);
 }
 
-void spi_select_slave(uint8_t id) { *(spi_base_ptr + SPI_SSR) = 0xFFFFFFFE; }
+void spi_select_slave(uint8_t id) {
+    uint32_t onehot = 1 << id;
+    *(spi_base_ptr + SPI_SSR) = ~onehot;
+}
 
 void spi_deselect_slave(uint8_t id) { *(spi_base_ptr + SPI_SSR) = 0xFFFFFFFF; }
