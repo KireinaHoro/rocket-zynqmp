@@ -1,8 +1,8 @@
 *.o
 **/*.o
-bootrom.*
+*.img
 *.a
-*.elf*
+*.elf
 coegen
 .gdbinit
 linker.ld
