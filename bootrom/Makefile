@@ -1,5 +1,5 @@
-bootrom_elf = bootrom.elf
-bootrom_img = bootrom.img
+debug_img = debug.img
+deploy_img = deploy.img
 
 driver_subdir	:= driver
 driver_sources	:= $(wildcard $(driver_subdir)/*.c)
@@ -20,7 +20,9 @@ STRIP=$(TRIPLE)strip
 
 .PHONY: all clean
 
-all: $(bootrom_img) $(bootrom_elf)
+.PRECIOUS: %.elf
+
+all: $(deploy_img) $(debug_img)
 
 $(driver_objects): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -31,11 +33,8 @@ $(driver_objects): %.o: %.c
 %.ld: %.ldS
 	$(CPP) -P $^ -o $@
 
-$(driver_library): $(driver_objects)
-	ar rcs $@ $^
-
-%.elf: %.S main.c linker.ld $(driver_library)
-	$(CC) $(CFLAGS) $(driver_include) -Tlinker.ld bootrom.S main.c syscalls.c $(driver_library) -static -o $@
+%.elf: %.ld bootrom.S main.c $(driver_objects)
+	$(CC) $(CFLAGS) $(driver_include) -T$< bootrom.S main.c syscalls.c $(driver_objects) -static -o $@
 
 clean:
-	rm -f $(bootrom_img) *.elf $(driver_objects) $(driver_library)
+	rm -f *.img *.elf $(driver_objects) $(driver_library)

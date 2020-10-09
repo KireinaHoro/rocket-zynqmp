@@ -2,6 +2,8 @@ OUTPUT_ARCH(riscv)
 
 #include "driver/mem_map.h"
 
+ENTRY(_start)
+
 SECTIONS
 {
     /* we relax the page-alignment requirement except for stacks */
