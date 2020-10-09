@@ -8,12 +8,6 @@
 
 // Xilinx AXI_QUAD_SPI
 
-#ifdef MEM_MAP_SPI_BASE
-#define SPI_BASE ((uint32_t)MEM_MAP_SPI_BASE)
-#else
-#define SPI_BASE 0
-#endif
-
 // Global interrupt enable register [Write]
 #define SPI_GIER 0x07u
 

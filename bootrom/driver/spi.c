@@ -4,7 +4,7 @@
 
 #define GetBit(r, p) (((r) & (1 << p)) >> p)
 
-volatile uint32_t *spi_base_ptr = (uint32_t *)(SPI_BASE);
+volatile uint32_t *spi_base_ptr = (uint32_t *)(SPI_PERIPH_BASE);
 
 void spi_init() {
   // software reset?
