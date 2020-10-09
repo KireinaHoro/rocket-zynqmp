@@ -5,11 +5,14 @@ void main(int hartid, void *dtb) {
     uart_init();
     // trap requires UART
     setup_trap();
-    printf(">>> Init on hart 0\n");
+    printf("\n>>> Init on hart 0\n");
     printf(">>> BootROM DTB at %p\n", dtb);
+    printf(">>> SPI controller setup\n");
+    spi_init();
+    printf(">>> Device startup\n");
 
-    printf("TEST STARTUP - SPINNING\n");
 
+    printf(">>> Jobs done, spinning\n");
     goto hang;
   } else {
     goto hang;
