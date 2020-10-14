@@ -8,6 +8,23 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+int _read(int fd, char *ptr, int len) {
+  int i;
+  fd = fd;
+  for (i = 0; i < len; i++) {
+    char recv = uart_recv();
+    uart_send(recv); // echo back
+    *ptr++ = recv;
+    if (recv == '\r') {
+        *ptr++ = '\n';
+        ++i;
+        uart_send('\n');
+        break;
+    }
+  }
+  return i;
+}
+
 int _write(int file, char *ptr, int len) {
   int i;
   file = file;
@@ -44,7 +61,6 @@ intptr_t _sbrk(ptrdiff_t heap_incr) {
   heap_end = new_heap_end;
   return prev_heap_end;
 }
-int _read(int fd, char *buff, int size) { return 0; }
 
 int _open(const char *name, int flags, int mode) { return 0; }
 
