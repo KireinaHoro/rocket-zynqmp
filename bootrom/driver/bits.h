@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+#include "riscv.h"
 
 #define likely(x) __builtin_expect((x), 1)
 #define unlikely(x) __builtin_expect((x), 0)
@@ -44,5 +47,18 @@ void _assert(bool x, const char *file, int lineno);
 #include "riscv.h"
 #include "spi.h"
 #include "uart.h"
+#include "gpio.h"
+
+static inline void delay(int rounds) {
+  for (int i = 0; i < rounds; ++i) {
+      asm volatile ("nop");
+  }
+}
+
+static inline void die() {
+    while (true) {
+        wfi();
+    }
+}
 
 #endif
