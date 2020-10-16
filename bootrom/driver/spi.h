@@ -63,6 +63,6 @@ void spi_recv_multi(uint8_t *dat, uint8_t n);
 void spi_select_slave(uint8_t id);
 
 // deselect slave device
-void spi_deselect_slave(uint8_t id);
+void spi_deselect_slave();
 
 #endif

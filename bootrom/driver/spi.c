@@ -1,6 +1,9 @@
 // See LICENSE for license details.
 
+// Note: delays are based on 100MHz CPU & 2MHz SPI clocks
+
 #include "spi.h"
+#include "bits.h"
 
 #define GetBit(r, p) (((r) & (1 << p)) >> p)
 
@@ -32,6 +35,7 @@ uint8_t spi_send(uint8_t dat) {
   *(spi_base_ptr + SPI_DTR) = dat;
   while (!GetBit(*(spi_base_ptr + SPI_SR), 2))
     ;
+  delay(300);
   return *(spi_base_ptr + SPI_DRR);
 }
 
@@ -51,6 +55,7 @@ void spi_recv_multi(uint8_t *dat, uint8_t n) {
     *(spi_base_ptr + SPI_DTR) = 0xff;
   while (!GetBit(*(spi_base_ptr + SPI_SR), 2))
     ;
+  delay(300 * n);
   for (i = 0; i < n; i++)
     *(dat++) = *(spi_base_ptr + SPI_DRR);
 }
@@ -60,4 +65,7 @@ void spi_select_slave(uint8_t id) {
     *(spi_base_ptr + SPI_SSR) = ~onehot;
 }
 
-void spi_deselect_slave(uint8_t id) { *(spi_base_ptr + SPI_SSR) = 0xFFFFFFFF; }
+void spi_deselect_slave() {
+    *(spi_base_ptr + SPI_SSR) = 0xFFFFFFFF;
+    delay(100);
+}
