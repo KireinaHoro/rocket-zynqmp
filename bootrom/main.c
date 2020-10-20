@@ -15,6 +15,9 @@ void main(int hartid, void *dtb) {
     spi_init();
     printf(">>> Device startup\n");
 
+    printf(">>> Enabling ADC clock...\n");
+    write_gpio_reg(0x10); // 0x10: EN_CLK_ADC
+
     for (int i = 7; i >= 0; --i) {
         uint8_t readback = 0;
 
@@ -83,7 +86,7 @@ hang:
           printf("Invalid bitslip %d: must be in [0,8)\n", temp);
       } else {
           bitslip = temp;
-          write_gpio_reg(bitslip << 5);
+          write_gpio_reg(bitslip << 5 | 0x10); // 0x10: EN_CLK_ADC
       }
   }
 }
