@@ -3,6 +3,8 @@
 #define DEBUG_P(...) printf(__VA_ARGS__)
 //#define DEBUG_P(...)
 
+//#define READBACK
+
 void main(int hartid, void *dtb) {
   int bitslip = 0;
   if (hartid == 0) {
@@ -19,7 +21,9 @@ void main(int hartid, void *dtb) {
     write_gpio_reg(0x10); // 0x10: EN_CLK_ADC
 
     for (int i = 7; i >= 0; --i) {
+#ifdef READBACK
         uint8_t readback = 0;
+#endif
 
         printf(">>> Bringing up ADC @ SC%c_%c...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2));
 
@@ -35,33 +39,39 @@ void main(int hartid, void *dtb) {
         spi_send(0x80 | 0x19); // OUTTEST = 1
         spi_deselect_slave();
 
+#ifdef READBACK
         spi_select_slave(16 + i);
         spi_send(0x80 | 0x03); // read 03h: pattern MSB
         spi_recv_multi(&readback, 1);
         spi_deselect_slave();
         DEBUG_P("03h = %#x\n", readback);
+#endif
 
         spi_select_slave(16 + i);
         spi_send(0x00 | 0x04); // write 04h: pattern LSB
         spi_send(0x84);
         spi_deselect_slave();
 
+#ifdef READBACK
         spi_select_slave(16 + i);
         spi_send(0x80 | 0x04); // read 04h: pattern LSB
         spi_recv_multi(&readback, 1);
         spi_deselect_slave();
         DEBUG_P("04h = %#x\n", readback);
+#endif
 
         spi_select_slave(16 + i);
         spi_send(0x00 | 0x02); // write 02h: output mode
         spi_send(0x07);        // 3.5mA | no-termination | output-on | 1-lane 16bit
         spi_deselect_slave();
 
+#ifdef READBACK
         spi_select_slave(16 + i);
         spi_send(0x80 | 0x02); // read 02h: output mode
         spi_recv_multi(&readback, 1);
         spi_deselect_slave();
         DEBUG_P("02h = %#x\n", readback);
+#endif
     }
 
     printf(">>> Jobs done, spinning\n");
@@ -71,7 +81,6 @@ void main(int hartid, void *dtb) {
   }
 hang:
   while (true) {
-      // GPIO LED counter
       printf("Current Bitslip: %d\n", bitslip);
       printf("Enter new bitslip: ");
       fflush(stdout);
