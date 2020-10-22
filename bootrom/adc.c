@@ -4,7 +4,11 @@ void setup_adc(int i, long test_pattern) {
 #ifdef READBACK
     uint8_t readback = 0;
 #endif
-    printf(">>> Bringing up ADC @ SC%c_%c...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2));
+    if (test_pattern > 0) {
+        printf(">>> Bringing up ADC @ SC%c_%c with test pattern %#x...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2), (uint32_t)test_pattern);
+    } else {
+        printf(">>> Bringing up ADC @ SC%c_%c for real data...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2));
+    }
 
     spi_select_slave(16 + i);
     spi_send(0x00 | 0x00); // write 00h: reset
