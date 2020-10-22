@@ -7,6 +7,8 @@
 
 void main(int hartid, void *dtb) {
   int bitslip = 0;
+  init_cmd();
+  uint32_t cmd = recv_cmd();
   if (hartid == 0) {
     uart_init();
     // trap requires UART
@@ -74,28 +76,22 @@ void main(int hartid, void *dtb) {
 #endif
     }
 
-    printf(">>> Jobs done, spinning\n");
-    goto hang;
+    printf(">>> Waiting for command from PCIe...\n");
   } else {
-    goto hang;
+    while (true) wfi();
   }
-hang:
   while (true) {
-      printf("Current Bitslip: %d\n", bitslip);
-      printf("Enter new bitslip: ");
-      fflush(stdout);
-      int temp;
-      int ret = scanf("%d", &temp);
-      if (ret <= 0) {
-          printf("stdin got clogged up, flushing...\n");
-          fflush(stdin);
-          continue;
-      }
-      if (temp < 0 || temp >= 8) {
-          printf("Invalid bitslip %d: must be in [0,8)\n", temp);
-      } else {
-          bitslip = temp;
-          write_gpio_reg(bitslip << 5 | 0x10); // 0x10: EN_CLK_ADC
+      uint32_t curr_cmd = recv_cmd();
+      if (curr_cmd != cmd) {
+          printf("New cmd: %#x\n", curr_cmd);
+          cmd = curr_cmd;
+          if (cmd >= 8) {
+              printf("Invalid bitslip %d: must be in [0,8)\n", cmd);
+          } else {
+              bitslip = cmd;
+              printf("Updating bitslip = %d\n", bitslip);
+              write_gpio_reg(bitslip << 5 | 0x10); // 0x10: EN_CLK_ADC
+          }
       }
   }
 }

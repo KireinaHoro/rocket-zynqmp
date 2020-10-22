@@ -48,6 +48,7 @@ void _assert(bool x, const char *file, int lineno);
 #include "spi.h"
 #include "uart.h"
 #include "gpio.h"
+#include "cmd.h"
 
 static inline void delay(int rounds) {
   for (int i = 0; i < rounds; ++i) {
