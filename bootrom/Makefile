@@ -33,8 +33,8 @@ $(driver_objects): %.o: %.c
 %.ld: %.ldS
 	$(CPP) -P $^ -o $@
 
-%.elf: %.ld bootrom.S main.c syscalls.c $(driver_objects)
-	$(CC) $(CFLAGS) $(driver_include) -T$< bootrom.S main.c syscalls.c $(driver_objects) -static -o $@
+%.elf: %.ld bootrom.S main.c adc.c syscalls.c $(driver_objects)
+	$(CC) $(CFLAGS) $(driver_include) -T$^ -static -o $@
 
 clean:
 	rm -f *.img *.elf $(driver_objects) $(driver_library)

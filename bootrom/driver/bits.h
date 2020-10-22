@@ -62,4 +62,6 @@ static inline void die() {
     }
 }
 
+void setup_adc(int i, long test_pattern);
+
 #endif

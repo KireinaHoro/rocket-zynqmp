@@ -6,6 +6,6 @@ void init_cmd() {
     *cmd_base_ptr = ~0;
 }
 
-uint32_t recv_cmd() {
+int32_t recv_cmd() {
     return *cmd_base_ptr;
 }
