@@ -8,6 +8,7 @@
 void bring_all(long test_pattern) {
     static long current = -1;
     if (current != test_pattern) {
+        //printf("Bring_all test_pattern=%#lx\n", test_pattern);
         for (int i = 7; i >= 0; --i) {
             setup_adc(i, test_pattern);
         }
@@ -31,28 +32,27 @@ void main(int hartid, void *dtb) {
 
     bring_all(PATTERN); // start in test mode
 
-    printf(">>> Enabling ADC clock...\n");
-    write_gpio_reg(0x10); // 0x10: EN_CLK_ADC
-
-    printf(">>> Waiting for command from PCIe...\n");
+    printf(">>> Accepting command from PCIe...\n");
   } else {
     while (true) wfi();
   }
   while (true) {
       int curr_cmd = recv_cmd();
       if (curr_cmd != cmd) {
-          printf("New cmd: %#x\n", curr_cmd);
           cmd = curr_cmd;
 
           if (cmd >= 0) {
-              // bitslip calibration
-              bring_all(PATTERN);
-              if (cmd >= 8) {
-                  printf("Invalid bitslip %d: must be in [0,8)\n", cmd);
+              // bitslip calibration: low 2 bytes for bitslip, high 2 bytes for pattern
+              uint16_t pattern = ((uint32_t)cmd & 0xffff0000) >> 16;
+              bring_all(pattern);
+
+              uint16_t slip = cmd & 0xffff;
+              if (slip >= 64) {
+                  printf("Invalid bitslip %d: must be in [0, 64)\n", slip);
               } else {
-                  bitslip = cmd;
-                  printf("Updating bitslip = %d\n", bitslip);
-                  write_gpio_reg(bitslip << 5 | 0x10); // 0x10: EN_CLK_ADC
+                  bitslip = slip;
+                  //printf("Updating bitslip = %d\n", bitslip);
+                  write_gpio_reg(bitslip << 4);
               }
           } else {
               // normal operation

@@ -4,12 +4,6 @@ void setup_adc(int i, long test_pattern) {
 #ifdef READBACK
     uint8_t readback = 0;
 #endif
-    if (test_pattern > 0) {
-        printf(">>> Bringing up ADC @ SC%c_%c with test pattern %#x...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2), (uint32_t)test_pattern);
-    } else {
-        printf(">>> Bringing up ADC @ SC%c_%c for real data...\n", 'A' + ((7 - i) / 2), 'A' + ((7 - i) % 2));
-    }
-
     spi_select_slave(16 + i);
     spi_send(0x00 | 0x00); // write 00h: reset
     spi_send(0x80);
@@ -17,7 +11,7 @@ void setup_adc(int i, long test_pattern) {
 
     // 00h reset is write-only
 
-    if (test_pattern > 0) {
+    if (test_pattern >= 0) {
         spi_select_slave(16 + i);
         spi_send(0x00 | 0x03); // write 03h: pattern MSB
         spi_send(0x80 | ((test_pattern >> 8) & 0x3f)); // OUTTEST = 1
