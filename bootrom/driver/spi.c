@@ -45,6 +45,7 @@ void spi_send_multi(const uint8_t *dat, uint8_t n) {
     *(spi_base_ptr + SPI_DTR) = *(dat++);
   while (!GetBit(*(spi_base_ptr + SPI_SR), 2))
     ;
+  delay(300 * n);
   // reset recv FIFO
   *(spi_base_ptr + SPI_CR) = 0xC6;
 }
