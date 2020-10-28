@@ -68,7 +68,7 @@ void setup_adc(int i, long test_pattern) {
 }
 
 void bring_all_adc(long test_pattern) {
-    printf(">>> Starting all ADCs in test mode...\n");
+    //printf(">>> Starting all ADCs in test mode...\n");
     static long current = -1;
     if (current != test_pattern) {
         //printf("Bring_all test_pattern=%#lx\n", test_pattern);
