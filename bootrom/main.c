@@ -17,6 +17,7 @@ void main(int hartid, void *dtb) {
     printf(">>> Device startup\n");
 
     bring_all_adc(PATTERN); // start in test mode
+    bring_all_synth();
 
     printf(">>> Accepting command from PCIe...\n");
   } else {
