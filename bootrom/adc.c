@@ -66,3 +66,15 @@ void setup_adc(int i, long test_pattern) {
     DEBUG_P("02h = %#x\n", readback);
 #endif
 }
+
+void bring_all_adc(long test_pattern) {
+    printf(">>> Starting all ADCs in test mode...\n");
+    static long current = -1;
+    if (current != test_pattern) {
+        //printf("Bring_all test_pattern=%#lx\n", test_pattern);
+        for (int i = 7; i >= 0; --i) {
+            setup_adc(i, test_pattern);
+        }
+        current = test_pattern;
+    }
+}

@@ -62,6 +62,10 @@ static inline void die() {
     }
 }
 
+#define DEBUG_P(...) printf(__VA_ARGS__)
+//#define DEBUG_P(...)
+
 void setup_adc(int i, long test_pattern);
+void bring_all_adc(long test_pattern);
 
 #endif
