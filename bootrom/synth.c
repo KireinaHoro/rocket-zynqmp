@@ -1,6 +1,6 @@
 #include "bits.h"
 
-#define READBACK
+#include "assert.h"
 
 #define SEND(B_0, B_1, B_2) \
 { \
@@ -25,12 +25,20 @@
 #define RECV(NAME, ADDR)
 #endif
 
-void setup_synth(int i) {
+void setup_synth(int i, int freq, int chdiv) {
     uint8_t cmd[3];
 
 #ifdef READBACK
     uint8_t readback[2];
 #endif
+
+    int vco = freq * chdiv;
+    assert(vco > 3200 && vco < 6400);
+    
+    int pll_n = vco / 100;
+    int pll_rem = vco % 100;
+    uint32_t pll_dem = 10000000;
+    uint32_t pll_num = pll_rem * pll_dem / 100;
 
     // reset registers
     SEND(0x00, 0x22, 0x1e)
@@ -38,28 +46,42 @@ void setup_synth(int i) {
     // enable readback, power down device
     SEND(0x00, 0x22, 0x19)
 
-    // PLL_N = 73
-    SEND(0x24, 0x00, 0x49)
+    // PLL_N
+    SEND(0x24, (pll_n >> 8) & 0xff, pll_n & 0xff)
     RECV(PLL_N, 0x24)
 
-    // PLL_NUM[31:16] = 6103
-    SEND(0x2a, 0x17, 0xd7)
+    uint16_t pll_num_hi = (pll_num >> 16);
+    // PLL_NUM[31:16]
+    SEND(0x2a, (pll_num_hi >> 8) & 0xff, pll_num_hi & 0xff)
     RECV(PLL_NUM_HI, 0x2a)
 
-    // PLL_NUM[15:0] = 33792
-    SEND(0x2b, 0x84, 0x00)
+    uint16_t pll_num_lo = pll_num & 0xffff;
+    // PLL_NUM[15:0]
+    SEND(0x2b, (pll_num_lo >> 8) & 0xff, pll_num_lo & 0xff)
     RECV(PLL_NUM_LO, 0x2b)
 
-    // PLL_DEN[31:16] = 30517
-    SEND(0x26, 0x77, 0x35)
-    RECV(PLL_DEN_HI, 0x26)
+    uint16_t pll_dem_hi = (pll_dem >> 16);
+    // PLL_NUM[31:16]
+    SEND(0x26, (pll_dem_hi >> 8) & 0xff, pll_dem_hi & 0xff)
+    RECV(PLL_DEM_HI, 0x26)
 
-    // PLL_DEN[15:0] = 37888
-    SEND(0x27, 0x94, 0x00)
-    RECV(PLL_DEN_LO, 0x27)
+    uint16_t pll_dem_lo = pll_dem & 0xffff;
+    // PLL_NUM[15:0]
+    SEND(0x27, (pll_dem_lo >> 8) & 0xff, pll_dem_lo & 0xff)
+    RECV(PLL_DEM_LO, 0x27)
 
-    // CHDIV = 8
-    SEND(0x4b, 0x08, 0xc0)
+    // CHDIV
+    int count =
+        chdiv == 2 ? 0 :
+        chdiv == 4 ? 1 :
+        chdiv == 8 ? 3 :
+        chdiv == 16 ? 5 :
+        chdiv == 32 ? 7 :
+        chdiv == 64 ? 9 :
+        chdiv == 128 ? 12 :
+        chdiv == 256 ? 14 : -1;
+    assert(count != -1);
+    SEND(0x4b, 0x08 & (count >> 2), (count & 0x3) << 6)
     RECV(CHDIV, 0x4b)
 
     // power up RFout A and B
@@ -71,9 +93,9 @@ void setup_synth(int i) {
     RECV(CFG, 0x00)
 }
 
-void bring_all_synth() {
-    printf(">>> Starting all RF synthesizers...\n");
+void bring_all_synth(int freq, int chdiv) {
+    printf(">>> Starting all RF synthesizers with freq=%d chdiv=%d...\n", freq, chdiv);
     for (int i = 0; i < 2; ++i) {
-        setup_synth(i);
+        setup_synth(i, freq, chdiv);
     }
 }

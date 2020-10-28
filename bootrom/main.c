@@ -17,7 +17,10 @@ void main(int hartid, void *dtb) {
     printf(">>> Device startup\n");
 
     bring_all_adc(PATTERN); // start in test mode
-    bring_all_synth();
+    bring_all_synth(915, 4);
+
+    printf(">>> Enabling TX RF switches...\n");
+    write_gpio_reg(0xf);
 
     printf(">>> Accepting command from PCIe...\n");
   } else {
@@ -31,6 +34,13 @@ void main(int hartid, void *dtb) {
           if (cmd >= 0) {
               // bitslip calibration: low 2 bytes for bitslip, high 2 bytes for pattern
               uint16_t pattern = ((uint32_t)cmd & 0xffff0000) >> 16;
+
+              if (pattern & 0xc000) {
+                // set synthesizer frequnecy
+                bring_all_synth(pattern & 0x3ff, 4);
+                continue;
+              }
+
               bring_all_adc(pattern);
 
               uint16_t slip = cmd & 0xffff;
@@ -39,7 +49,7 @@ void main(int hartid, void *dtb) {
               } else {
                   bitslip = slip;
                   //printf("Updating bitslip = %d\n", bitslip);
-                  write_gpio_reg(bitslip << 4);
+                  write_gpio_reg((bitslip << 4) | 0xf);
               }
           } else {
               // normal operation

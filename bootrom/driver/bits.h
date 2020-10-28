@@ -68,7 +68,7 @@ static inline void die() {
 void setup_adc(int i, long test_pattern);
 void bring_all_adc(long test_pattern);
 
-void setup_synth(int i);
-void bring_all_synth();
+void setup_synth(int i, int freq, int chdiv);
+void bring_all_synth(int freq, int chdiv);
 
 #endif
