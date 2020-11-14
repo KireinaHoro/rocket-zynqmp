@@ -1,6 +1,6 @@
 [submodule "rocket-chip"]
 	path = rocket-chip
-	url = https://github.com/chipsalliance/rocket-chip
+	url = git@github.com:parsa-epfl/rocket-chip
 [submodule "opensbi"]
 	path = opensbi
 	url = https://github.com/KireinaHoro/opensbi
@@ -12,4 +12,4 @@
 	url = https://github.com/KireinaHoro/testchipip/
 [submodule "inclusive-cache"]
 	path = inclusive-cache
-	url = https://github.com/sifive/block-inclusivecache-sifive/
+	url = git@github.com:parsa-epfl/inclusivecache

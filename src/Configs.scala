@@ -14,7 +14,7 @@ class WithSystemMemory(base: BigInt = 0x80000000L, size: BigInt = 0x10000000L) e
     master = x.master.copy(idBits = 6, base = base, size = size)))
 })
 
-class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) extends Config((site, here, up) => {
+class WithSystemMMIO(base: BigInt = 0x20000000L, size: BigInt = 0x20000000L) extends Config((site, here, up) => {
   case ExtBus => up(ExtBus, site).map(_.copy(idBits = 6, base = base, size = size))
 })
 
@@ -57,8 +57,9 @@ class WithVerilatorDebug extends Config((site, here, up) => {
 class EdgeBoardConfig extends Config(
   new WithBoardDebug ++
   new WithSystemMemory(0x40000000L, 0x3ff00000L) ++ // high 1G of PS DDR
-  new WithSystemMMIO(base = 0xe0000000L) ++ // ZynqMP peripherals
+  new WithSystemMMIO ++
   new WithNBigCores(1) ++
+  new WithInclusiveCache ++
   new BaseSystemConfig
 )
 
