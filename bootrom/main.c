@@ -17,7 +17,8 @@ void main(int hartid, void *dtb) {
     printf(">>> Device startup\n");
 
     bring_all_adc(PATTERN); // start in test mode
-    bring_all_synth(915, 4);
+    // default to 915 MHz
+    setup_synth(0, 915, 4);
 
     printf(">>> Enabling TX RF switches...\n");
     write_gpio_reg(0xf);

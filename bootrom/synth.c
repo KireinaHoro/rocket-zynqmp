@@ -32,6 +32,8 @@ void setup_synth(int i, int freq, int chdiv) {
     uint8_t readback[2];
 #endif
 
+    printf("Enabling synthesizer %d with freq=%d chdiv=%d...\n", i, freq, chdiv);
+
     int vco = freq * chdiv;
     assert(vco > 3200 && vco < 6400);
     
@@ -91,11 +93,4 @@ void setup_synth(int i, int freq, int chdiv) {
     // power up the device
     SEND(0x00, 0x22, 0x18)
     RECV(CFG, 0x00)
-}
-
-void bring_all_synth(int freq, int chdiv) {
-    printf(">>> Starting all RF synthesizers with freq=%d chdiv=%d...\n", freq, chdiv);
-    for (int i = 0; i < 2; ++i) {
-        setup_synth(i, freq, chdiv);
-    }
 }
