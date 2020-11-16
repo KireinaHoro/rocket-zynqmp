@@ -71,4 +71,7 @@ void bring_all_adc(long test_pattern);
 void setup_synth(int i, int freq, int chdiv);
 void bring_all_synth(int freq, int chdiv);
 
+void setup_mixer(int i, uint8_t gain, uint8_t attn);
+void bring_all_mixer(uint8_t gain, uint8_t attn);
+
 #endif
