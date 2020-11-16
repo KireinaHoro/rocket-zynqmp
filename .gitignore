@@ -3,3 +3,10 @@ out
 .idea
 .idea_modules
 gemmini_params.h
+vivado*.jou
+vivado*.log
+vivado*.str
+webtalk*.jou
+webtalk*.log
+hs_*.log
+.Xil/
