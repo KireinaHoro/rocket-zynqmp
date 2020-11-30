@@ -2,8 +2,8 @@ JOBS = 20
 ROCKET_DIR ?= $(BASE_DIR)/rocket-chip
 TESTCHIPIP_DIR = $(BASE_DIR)/testchipip
 PROJECT ?= zynqmp
-TOP_MODULE ?= RfidTop
-CONFIG ?= UhfRfidConfig
+TOP_MODULE ?= LabXTop
+CONFIG ?= LabXConfig
 
 BASE_DIR = $(abspath .)
 BUILD = $(BASE_DIR)/build

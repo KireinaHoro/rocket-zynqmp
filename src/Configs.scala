@@ -29,28 +29,29 @@ class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extend
 
 class BaseSystemConfig extends Config(
   new WithCoherentBusTopology ++
-  new SystemPresets(nInterrupts = 3) ++ // two AXI SPI controllers
+  new SystemPresets(nInterrupts = 32) ++
   new WithoutTLMonitors ++
   new WithDefaultMemPort() ++
   new WithDefaultMMIOPort() ++
-  new WithDTS("jsteward,uhf-rfid-ctrl", Nil) ++
+  new WithDTS("jsteward,compnet-lab-x", Nil) ++
   new BaseSubsystemConfig()
 )
 
-class WithBoardDebug extends Config(new WithNBreakpoints(4) ++ new WithJtagDTM)
+class WithBoardDebug extends Config(new WithNBreakpoints(8) ++ new WithJtagDTM)
 class WithVerilatorDebug extends Config((site, here, up) => {
   case ExportDebug => up(ExportDebug, site).copy(protocols = Set(DMI))
 })
 
-class UhfRfidConfig extends Config(
+class LabXConfig extends Config(
   new WithBoardDebug ++
-  new WithSystemMemory(0x70000000L, 0x90000000L) ++ // XIP + 2GB DRAM on board
+  new WithSystemMemory(0x70000000L, 0x90000000L) ++ // XIP + DRAM on board
   new WithSystemMMIO(size = 0x10000000L) ++ // 0x60000000-0x70000000
   new WithNBigCores(1) ++
+  new WithDefaultSlavePort ++
   new BaseSystemConfig
 )
 
 class VerilatorConfig extends Config(
   new WithVerilatorDebug ++
-  new UhfRfidConfig
+  new LabXConfig
 )
