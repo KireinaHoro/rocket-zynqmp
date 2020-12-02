@@ -107,6 +107,7 @@ void main(int hartid, void *dtb) {
         /* enable ADC data sampling
          * cmd[29:0]: reserved
          */
+        write_gpio_reg((bitslip << 4) | 0xf);
         bring_all_adc(-1);
         break;
       }
