@@ -10,7 +10,7 @@ driver_library	:= driver.a
 TRIPLE ?= /opt/riscv/rv64imac/bin/riscv64-unknown-elf-
 CC=$(TRIPLE)gcc
 CPP=$(TRIPLE)cpp
-CFLAGS_RV64=-g -Wall -Werror -nostartfiles -fno-strict-aliasing \
+CFLAGS_RV64=-g -Wall -Werror -flto -nostartfiles -fno-strict-aliasing \
 	-Os -fno-omit-frame-pointer -fno-optimize-sibling-calls \
 	-mno-save-restore -mstrict-align -mabi=lp64d -march=rv64gc \
 	-mcmodel=medany -ffreestanding -Wl,--build-id=none
