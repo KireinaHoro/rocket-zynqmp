@@ -1,19 +1,32 @@
 #include "bits.h"
 
-#include "spi371109.h"
-
-#define READBACK
+//#define READBACK
 
 #define SEND(cc) \
 { \
-    trf371109_regrw(15 - i, cc); \
+    spi_select_slave(15 - i); \
+    cmd[0] = (cc >> 24) & 0xff; \
+    cmd[1] = (cc >> 16) & 0xff; \
+    cmd[2] = (cc >> 8) & 0xff; \
+    cmd[3] = (cc) & 0xff; \
+    spi_send_multi(cmd, 4); \
+    spi_deselect_slave(); \
 }
 
 #ifdef READBACK
 #define RECV(NAME, ADDR) \
 { \
-    uint32_t readback = trf371109_regrw(15 - i, 0x10000001 | (ADDR << 1)); \
-    DEBUG_P(#NAME " = %#x\n", readback); \
+    spi_select_slave(15 - i); \
+    cmd[0] = (0x10) & 0xff; \
+    cmd[1] = (0x00) & 0xff; \
+    cmd[2] = (0x00) & 0xff; \
+    cmd[3] = ((ADDR) << 1 | 0x1) & 0xff; \
+    spi_send_multi(cmd, 4); \
+    spi_deselect_slave(); \
+    spi_select_slave(15 - i); \
+    spi_recv_multi(readback, 4); \
+    spi_deselect_slave(); \
+    DEBUG_P(#NAME " = %#x %#x %#x %#x\n", readback[0], readback[1], readback[2], readback[3]); \
 }
 #else
 #define RECV(NAME, ADDR)
@@ -29,8 +42,10 @@ uint8_t reverse(uint8_t n) {
 }
 
 void setup_mixer(int i, uint8_t gain, uint8_t attn) {
+    uint8_t cmd[4];
+
 #ifdef READBACK
-    printf("Reading back regs for mixer %d...\n", i);
+    uint8_t readback[4];
     RECV(R1, 0x4)
     RECV(R2, 0x2)
     RECV(R3, 0x6)

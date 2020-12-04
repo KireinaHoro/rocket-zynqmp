@@ -33,7 +33,7 @@ $(driver_objects): %.o: %.c
 %.ld: %.ldS
 	$(CPP) -P $^ -o $@
 
-components = adc.c synth.c mixer.c clkbuf.c spi371109.c
+components = adc.c synth.c mixer.c clkbuf.c
 
 %.elf: %.ld bootrom.S main.c $(components) syscalls.c $(driver_objects)
 	$(CC) $(CFLAGS) $(driver_include) -T$^ -static -o $@
