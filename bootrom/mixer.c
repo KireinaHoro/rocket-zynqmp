@@ -11,6 +11,7 @@
     cmd[3] = (cc) & 0xff; \
     spi_send_multi(cmd, 4); \
     spi_deselect_slave(); \
+    delay(500); \
 }
 
 #ifdef READBACK
@@ -26,6 +27,7 @@
     spi_select_slave(15 - i); \
     spi_recv_multi(readback, 4); \
     spi_deselect_slave(); \
+    delay(500); \
     DEBUG_P(#NAME " = %#x %#x %#x %#x\n", readback[0], readback[1], readback[2], readback[3]); \
 }
 #else
@@ -41,7 +43,7 @@ uint8_t reverse(uint8_t n) {
    return (lookup[n&0b1111] << 4) | lookup[n>>4];
 }
 
-void setup_mixer(int i, uint8_t gain, uint8_t attn) {
+void setup_mixer(int i, bool enable, bool autocal, uint8_t gain, uint8_t attn) {
     uint8_t cmd[4];
 
 #ifdef READBACK
@@ -55,14 +57,30 @@ void setup_mixer(int i, uint8_t gain, uint8_t attn) {
 
 	gain = reverse(gain);
 
-    //SEND(0x913f0080); // default value for Reg 1
-    //SEND(0x953f0080); // Mixer power down = 1
-	SEND(0x91300080 | gain << 15 | attn);
+    if (!enable) {
+        SEND(0x953f0080); // Mixer power down = 1
+        return;
+    } else {
+        SEND(0x913f0080); // Mixer power down = 1
+        return;
+    }
+
+    // register 1 - enable DC calibration
+	SEND(0x91100080 | gain << 15 | attn | 0x60);
+
+    // register 2 - disable DC auto calibration, Cal to 0xff IQ
+    SEND(0x5004070e | (0xffff) << 10);
+
+    return;
+    if (autocal) {
+        // register 2 - disable DC auto calibration
+        SEND(0x5004078e | 0x04000000);
+    }
 }
 
-void bring_all_mixer(uint8_t gain, uint8_t attn) {
+void bring_all_mixer(bool enable, bool autocal, uint8_t gain, uint8_t attn) {
     printf(">>> Starting all mixers...\n");
     for (int i = 0; i < 16; ++i) {
-        setup_mixer(i, gain, attn);
+        setup_mixer(i, enable, autocal, gain, attn);
     }
 }

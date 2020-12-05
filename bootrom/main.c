@@ -19,9 +19,10 @@ void main(int hartid, void *dtb) {
     bring_all_adc(PATTERN); // start in test mode
     // default to 915 MHz
     setup_synth(0, 915, 4);
-    // default gain=15 attn=0
-    bring_all_mixer(15, 0);
     bring_all_clkbuf();
+
+    // default gain=15 attn=0
+    bring_all_mixer(true, false, 15, 0);
 
     printf(">>> Enabling TX RF switches...\n");
     write_gpio_reg(0xf);
@@ -41,7 +42,7 @@ void main(int hartid, void *dtb) {
        * opcode[1:0]:
        *    0: ADC bitslip calibration
        *    1: LO frequency
-       *    2: reserved
+       *    2: mixer control
        *    3: enable ADC data sampling
        */
 
@@ -96,11 +97,15 @@ void main(int hartid, void *dtb) {
         /* mixer control
          * cmd[29:25]: gain [0, 24]
          * cmd[24]   : attenuator
-         * cmd[23:0] : reserved
+         * cmd[23]   : enable
+         * cmd[22]   : autocal
+         * cmd[21:0] : reserved
          */
         uint8_t gain = ((uint32_t)cmd & 0x3e000000) >> 25;
         uint8_t attn = ((uint32_t)cmd & 0x01000000) >> 24;
-        bring_all_mixer(gain, attn);
+        uint8_t enable = ((uint32_t)cmd & 0x00800000) >> 23;
+        uint8_t autocal = ((uint32_t)cmd & 0x00400000) >> 22;
+        bring_all_mixer(enable, autocal, gain, attn);
         break;
       }
       case 3: {
