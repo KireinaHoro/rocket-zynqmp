@@ -22,7 +22,7 @@ void setup_attn(int i, uint8_t attn) {
     }
     i /= 2;
 
-    printf("Enabling attenuator %d with attn=%#x...\n", i, attn);
+    //printf("Enabling attenuator %d with attn=%#x...\n", i, attn);
 
     SEND(((uint32_t)attn << 8) | addr);
 }

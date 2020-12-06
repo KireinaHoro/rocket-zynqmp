@@ -130,8 +130,6 @@ void main(int hartid, void *dtb) {
         uint8_t attn2 = ((uint32_t)cmd & 0x00007f00) >> 8;
         uint8_t attn3 = ((uint32_t)cmd & 0x000000fe) >> 1;
 
-        printf("cmd = %#x\n", cmd);
-
         if (adc_enable) {
             write_gpio_reg((bitslip << 4) | 0xf);
             bring_all_adc(-1);
