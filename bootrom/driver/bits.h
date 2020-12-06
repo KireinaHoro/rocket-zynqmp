@@ -76,4 +76,7 @@ void bring_all_mixer(bool enable, bool autocal, uint8_t gain, uint8_t attn);
 void setup_clkbuf(int i, int clkin);
 void bring_all_clkbuf();
 
+void setup_attn(int i, int mode);
+void bring_all_attns(int mode);
+
 #endif
