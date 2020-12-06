@@ -22,7 +22,7 @@ void main(int hartid, void *dtb) {
     bring_all_clkbuf();
 
     // default gain=15 attn=0
-    bring_all_mixer(true, false, 15, 0);
+    bring_all_mixer(true, false, 15, 0, 128, 128);
 
     printf(">>> Enabling TX RF switches...\n");
     write_gpio_reg(0xf);
@@ -99,13 +99,19 @@ void main(int hartid, void *dtb) {
          * cmd[24]   : attenuator
          * cmd[23]   : enable
          * cmd[22]   : autocal
-         * cmd[21:0] : reserved
+         * cmd[21:20]: reserved
+         * cmd[19:12]: DC offset Q
+         * cmd[11:4] : DC offset I
+         * cmd[3:0]  : mixer ID
          */
         uint8_t gain = ((uint32_t)cmd & 0x3e000000) >> 25;
         uint8_t attn = ((uint32_t)cmd & 0x01000000) >> 24;
         uint8_t enable = ((uint32_t)cmd & 0x00800000) >> 23;
         uint8_t autocal = ((uint32_t)cmd & 0x00400000) >> 22;
-        bring_all_mixer(enable, autocal, gain, attn);
+        uint8_t dc_q = ((uint32_t)cmd & 0xff000) >> 12;
+        uint8_t dc_i = ((uint32_t)cmd & 0xff0) >> 4;
+        uint8_t id = ((uint32_t)cmd & 0xf);
+        setup_mixer(id, enable, autocal, gain, attn, dc_i, dc_q);
         break;
       }
       case 3: {

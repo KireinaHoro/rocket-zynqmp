@@ -70,8 +70,8 @@ void bring_all_adc(long test_pattern);
 
 void setup_synth(int i, int freq, int chdiv);
 
-void setup_mixer(int i, bool enable, bool autocal, uint8_t gain, uint8_t attn);
-void bring_all_mixer(bool enable, bool autocal, uint8_t gain, uint8_t attn);
+void setup_mixer(int i, bool enable, bool autocal, uint8_t gain, uint8_t attn, uint32_t dc_i, uint32_t dc_q);
+void bring_all_mixer(bool enable, bool autocal, uint8_t gain, uint8_t attn, uint32_t dc_i, uint32_t dc_q);
 
 void setup_clkbuf(int i, int clkin);
 void bring_all_clkbuf();
