@@ -27,6 +27,8 @@ void main(int hartid, void *dtb) {
     printf(">>> Enabling TX RF switches...\n");
     write_gpio_reg(0xf);
 
+    bring_all_attns(0xfe);
+
     printf(">>> Accepting command from PCIe...\n");
   } else {
     while (true)
@@ -43,7 +45,7 @@ void main(int hartid, void *dtb) {
        *    0: ADC bitslip calibration
        *    1: LO frequency
        *    2: mixer control
-       *    3: enable ADC data sampling
+       *    3: ADC real data, attenuator
        */
 
       switch (((uint32_t)cmd & 0xc0000000) >> 30) {
@@ -115,11 +117,29 @@ void main(int hartid, void *dtb) {
         break;
       }
       case 3: {
-        /* enable ADC data sampling
-         * cmd[29:0]: reserved
+        /* enable ADC data sampling + attenuator
+         * cmd[29]   : enable 
+         * cmd[28:22]: atten 0
+         * cmd[21:15]: atten 1
+         * cmd[14:8] : atten 2
+         * cmd[7:1]  : atten 3
          */
-        write_gpio_reg((bitslip << 4) | 0xf);
-        bring_all_adc(-1);
+        uint8_t adc_enable = ((uint32_t)cmd & 0x20000000) >> 29;
+        uint8_t attn0 = ((uint32_t)cmd & 0x1fc00000) >> 22;
+        uint8_t attn1 = ((uint32_t)cmd & 0x003f8000) >> 15;
+        uint8_t attn2 = ((uint32_t)cmd & 0x00007f00) >> 8;
+        uint8_t attn3 = ((uint32_t)cmd & 0x000000fe) >> 1;
+
+        printf("cmd = %#x\n", cmd);
+
+        if (adc_enable) {
+            write_gpio_reg((bitslip << 4) | 0xf);
+            bring_all_adc(-1);
+        }
+        setup_attn(0, attn0 << 1);
+        setup_attn(1, attn1 << 1);
+        setup_attn(2, attn2 << 1);
+        setup_attn(3, attn3 << 1);
         break;
       }
       default: { printf("Unexpected command: %#x\n", cmd); }
