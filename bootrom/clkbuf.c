@@ -3,9 +3,9 @@
 #define SEND(cc) \
 { \
     spi_select_slave(27 - i); \
-    cmd[0] = (cc >> 24) & 0xff; \
-    cmd[1] = (cc >> 16) & 0xff; \
-    cmd[2] = (cc >> 8) & 0xff; \
+    cmd[0] = ((cc) >> 24) & 0xff; \
+    cmd[1] = ((cc) >> 16) & 0xff; \
+    cmd[2] = ((cc) >> 8) & 0xff; \
     cmd[3] = (cc) & 0xff; \
     spi_send_multi(cmd, 4); \
     spi_deselect_slave(); \
