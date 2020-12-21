@@ -83,7 +83,7 @@ void setup_synth(int i, int freq, int chdiv) {
         chdiv == 128 ? 12 :
         chdiv == 256 ? 14 : -1;
     assert(count != -1);
-    SEND(0x4b, 0x08 & (count >> 2), (count & 0x3) << 6)
+    SEND(0x4b, 0x08 | (count >> 2), (count & 0x3) << 6)
     RECV(CHDIV, 0x4b)
 
     // power up RFout A and B
