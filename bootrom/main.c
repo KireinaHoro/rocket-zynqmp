@@ -80,13 +80,14 @@ void main(int hartid, void *dtb) {
         uint32_t clkbuf0 = (cmd & 0x2) >> 1;
         uint32_t clkbuf1 = cmd & 0x1;
 
+#define synth_adiv(src, freq) setup_synth((src), (freq), (freq) <= 800 ? 8 : 4)
         if (clkbuf0 == clkbuf1) {
           // start one synthesizer
-          setup_synth(clkbuf0, clkbuf0 ? synth1_freq : synth0_freq, 4);
+          synth_adiv(clkbuf0, clkbuf0 ? synth1_freq : synth0_freq);
         } else {
           // start two synthesizers
-          setup_synth(0, synth0_freq, 4);
-          setup_synth(1, synth1_freq, 4);
+          synth_adiv(0, synth0_freq);
+          synth_adiv(1, synth1_freq);
         }
 
         // 1 is connected to clkin0 and vice versa
