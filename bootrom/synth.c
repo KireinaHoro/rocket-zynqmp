@@ -2,6 +2,8 @@
 
 #include "assert.h"
 
+#define READBACK
+
 #define SEND(B_0, B_1, B_2) \
 { \
     spi_select_slave(25 - i); \
@@ -25,6 +27,8 @@
 #define RECV(NAME, ADDR)
 #endif
 
+
+
 void setup_synth(int i, int freq, int chdiv) {
     uint8_t cmd[3];
 
@@ -35,7 +39,7 @@ void setup_synth(int i, int freq, int chdiv) {
     printf("Enabling synthesizer %d with freq=%d chdiv=%d...\n", i, freq, chdiv);
 
     int vco = freq * chdiv;
-    assert(vco > 3200 && vco < 6400);
+    assert(vco > 3200 && vco <= 6400);
     
     int pll_n = vco / 100;
     int pll_rem = vco % 100;
@@ -72,6 +76,7 @@ void setup_synth(int i, int freq, int chdiv) {
     SEND(0x27, (pll_dem_lo >> 8) & 0xff, pll_dem_lo & 0xff)
     RECV(PLL_DEM_LO, 0x27)
 
+
     // CHDIV
     int count =
         chdiv == 2 ? 0 :
@@ -83,7 +88,7 @@ void setup_synth(int i, int freq, int chdiv) {
         chdiv == 128 ? 12 :
         chdiv == 256 ? 14 : -1;
     assert(count != -1);
-    SEND(0x4b, 0x08 | (count >> 2), (count & 0x3) << 6)
+    SEND(0x4b, 0x08 | (0x07 & (count >> 2)), (count & 0x3) << 6) //bit 11 high fixed.
     RECV(CHDIV, 0x4b)
 
     // power up RFout A and B
@@ -93,4 +98,7 @@ void setup_synth(int i, int freq, int chdiv) {
     // power up the device
     SEND(0x00, 0x22, 0x18)
     RECV(CFG, 0x00)
+		delay(100000);
+
+		RECV(R110, 0x6e);
 }
