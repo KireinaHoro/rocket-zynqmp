@@ -3,7 +3,6 @@
 #define PATTERN 0x2a0c
 
 void main(int hartid, void *dtb) {
-  int bitslip = 0;
   init_cmd();
   int cmd = recv_cmd();
   if (hartid == 0) {
@@ -52,20 +51,19 @@ void main(int hartid, void *dtb) {
       case 0: {
         /* bitslip calibration
          * cmd[29:16]: pattern
-         * cmd[15:0] : bitslip
+         * cmd[15:11]: reserved
+         * cmd[10:6] : bitslip_id
+         * cmd[5:0]  : bitslip
          */
         uint16_t pattern = ((uint32_t)cmd & 0x3fff0000) >> 16;
+        uint16_t bitslip_id = ((uint32_t)cmd & 0x7c0) >> 6;
+        uint16_t bitslip = ((uint32_t)cmd & 0x3f);
 
         bring_all_adc(pattern);
 
-        uint16_t slip = cmd & 0xffff;
-        if (slip >= 64) {
-          printf("Invalid bitslip %d: must be in [0, 64)\n", slip);
-        } else {
-          bitslip = slip;
-          // printf("Updating bitslip = %d\n", bitslip);
-          write_gpio_reg((bitslip << 4) | 0xf);
-        }
+        // printf("Updating bitslip = %d\n", bitslip);
+        write_gpio_field(bitslip_id, 15, 5, 0); // bitslip_id at [19:15]
+        write_gpio_field(bitslip, 4, 6, 0);     // bitslip    at [9:4]
         break;
       }
       case 1: {
