@@ -25,7 +25,7 @@ void main(int hartid, void *dtb) {
     bring_all_mixer(true, false, 15, 0, 128, 128);
 
     printf(">>> Enabling TX RF switches...\n");
-    write_gpio_reg(0xf);
+    write_gpio_field(0xf, 0, 4, 0);
 
     bring_all_attns(0xfe);
 
@@ -132,7 +132,7 @@ void main(int hartid, void *dtb) {
         uint8_t attn3 = ((uint32_t)cmd & 0x000000fe) >> 1;
 
         if (adc_enable) {
-            write_gpio_reg((bitslip << 4) | 0xf);
+            write_gpio_field(0xf, 0, 4, 0);
             bring_all_adc(-1);
         }
         setup_attn(0, attn0 << 1);
