@@ -7,7 +7,7 @@ ENTRY(_start)
 SECTIONS
 {
     /* we relax the page-alignment requirement except for stacks */
-    . = 0x90000000;
+    . = DDR_BASE;
     .start : { *(.start) }
     .text       : {
         *(.text .text.*)
