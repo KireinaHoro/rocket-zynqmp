@@ -17,7 +17,7 @@ class WithSystemMMIO(base: BigInt = 0x60000000L, size: BigInt = 0x20000000L) ext
 })
 
 class SystemPresets(systemFreq: BigInt = 100000000, nInterrupts: Int = 1) extends Config((site, here, up) => {
-  case ResetVectorKey => BigInt(0x71000000L) // High 128Mbit of XIP SPI
+  case ResetVectorKey => BigInt(0x71800000L)
   case PeripheryBusKey => up(PeripheryBusKey, site).copy(dtsFrequency = Some(systemFreq))
   case RocketTilesKey => up(RocketTilesKey, site) map { r =>
     r.copy(core = r.core.copy(bootFreqHz = systemFreq))

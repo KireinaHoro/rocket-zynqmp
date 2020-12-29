@@ -6,7 +6,7 @@ TOP_MODULE ?= RfidTop
 CONFIG ?= UhfRfidConfig
 
 BASE_DIR = $(abspath .)
-BUILD = $(BASE_DIR)/build
+BUILD = $(BASE_DIR)/build-060
 BOOTROM = $(BASE_DIR)/bootrom
 OUT_VERILOG = $(BUILD)/$(PROJECT).$(CONFIG).v
 
@@ -40,7 +40,7 @@ verilator:
 	$(MILL) system.genVerilog $(TOP_MODULE) $(CONFIG)
 
 clean:
-	rm -rf build/*
+	rm -rf build-060/*
 
 .PHONY:  all clean
 
