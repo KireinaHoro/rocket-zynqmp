@@ -70,7 +70,7 @@ object system extends RocketModule {
   override def moduleDeps = super.moduleDeps ++ Seq(testchipip, `sifive-blocks`, `inclusive-cache`)
 
   val project = "zynqmp"
-  val buildDir = "build-060"
+  val buildDir = "build"
   val boardConfig = "EdgeBoardConfig"
   val boardTop = "EdgeBoardTop"
   val simConfig = "MidgardVerilatorConfig"
