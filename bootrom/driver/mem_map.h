@@ -1,6 +1,6 @@
 // memory regions
 #define DDR_BASE 0x80000000
-#define DDR_SIZE 0x40000000 // KU040 has 1GB while KU060 has 2GB; we only use 1GB
+#define DDR_SIZE 0x00040000
 #define XIP_BASE 0x71800000 // high 128Mb of configuration flash
 
 #define STACK_SIZE 0x10000
