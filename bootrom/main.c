@@ -51,31 +51,19 @@ void main(int hartid, void *dtb) {
       case 0: {
         /* bitslip calibration
          * cmd[29:16]: pattern
-         * cmd[15]   : reserved
-         * cmd[14:13]: mode
-         *     00: reserved
-         *     01: set bitslip only
-         *     10: set bypass only
-         *     11: set bypass + bitslip
-         * cmd[12:10]: bypass_id
+         * cmd[15:11]: reserved
          * cmd[10:6] : bitslip_id
          * cmd[5:0]  : bitslip
          */
         uint16_t pattern = ((uint32_t)cmd & 0x3fff0000) >> 16;
-        uint16_t mode = ((uint32_t)cmd & 0x6000) >> 13;
-        uint16_t bypass_id = ((uint32_t)cmd & 0x1c00) >> 10;
         uint16_t bitslip_id = ((uint32_t)cmd & 0x7c0) >> 6;
         uint16_t bitslip = ((uint32_t)cmd & 0x3f);
 
         bring_all_adc(pattern);
 
-        if (mode & 0x1) {
-            write_gpio_field(bitslip_id, 15, 5, 0); // bitslip_id at [19:15]
-            write_gpio_field(bitslip, 4, 6, 0);     // bitslip    at [9:4]
-        }
-        if (mode & 0x2) {
-            write_gpio_field(bypass_id, 20, 3, 0);  // bypass_id  at [22:20]
-        }
+        // printf("Updating bitslip = %d\n", bitslip);
+        write_gpio_field(bitslip_id, 15, 5, 0); // bitslip_id at [19:15]
+        write_gpio_field(bitslip, 4, 6, 0);     // bitslip    at [9:4]
         break;
       }
       case 1: {
