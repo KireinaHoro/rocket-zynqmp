@@ -77,4 +77,9 @@ void bring_all_adc(long test_pattern) {
         }
         current = test_pattern;
     }
+
+    // reset PCIe fifos
+    write_gpio_field(0x1, 10, 4, 0);
+    delay(1000);
+    write_gpio_field(0x0, 10, 4, 0);
 }
