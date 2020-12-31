@@ -51,21 +51,22 @@ void main(int hartid, void *dtb) {
       case 0: {
         /* bitslip calibration
          * cmd[29:16]: pattern
-         * cmd[15]   : reserved
-         * cmd[14:13]: mode
+         * cmd[15:14]: mode
          *     00: reserved
          *     01: set bitslip only
          *     10: set bypass only
          *     11: set bypass + bitslip
-         * cmd[12:10]: bypass_id
+         * cmd[13:11]: bypass_id
          * cmd[10:6] : bitslip_id
          * cmd[5:0]  : bitslip
          */
         uint16_t pattern = ((uint32_t)cmd & 0x3fff0000) >> 16;
-        uint16_t mode = ((uint32_t)cmd & 0x6000) >> 13;
-        uint16_t bypass_id = ((uint32_t)cmd & 0x1c00) >> 10;
+        uint16_t mode = ((uint32_t)cmd & 0xc000) >> 14;
+        uint16_t bypass_id = ((uint32_t)cmd & 0x3800) >> 11;
         uint16_t bitslip_id = ((uint32_t)cmd & 0x7c0) >> 6;
         uint16_t bitslip = ((uint32_t)cmd & 0x3f);
+
+        //printf("cmd=%#x pattern=%#x mode=%#x bypass_id=%#x bitslip_id=%#x bitslip=%#x\n", cmd, pattern, mode, bypass_id, bitslip_id, bitslip);
 
         bring_all_adc(pattern);
 
