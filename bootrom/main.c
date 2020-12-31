@@ -51,32 +51,26 @@ void main(int hartid, void *dtb) {
       case 0: {
         /* bitslip calibration
          * cmd[29:16]: pattern
-         * cmd[15:14]: mode
-         *     00: reserved
-         *     01: set bitslip only
-         *     10: set bypass only
-         *     11: set bypass + bitslip
-         * cmd[13:11]: bypass_id
-         * cmd[10:6] : bitslip_id
-         * cmd[5:0]  : bitslip
+         * cmd[15:15]: bitslip_valid
+         * cmd[14:12]: bypass_id
+         * cmd[11:7] : bitslip_id
+         * cmd[6:0]  : bitslip
          */
         uint16_t pattern = ((uint32_t)cmd & 0x3fff0000) >> 16;
-        uint16_t mode = ((uint32_t)cmd & 0xc000) >> 14;
-        uint16_t bypass_id = ((uint32_t)cmd & 0x3800) >> 11;
-        uint16_t bitslip_id = ((uint32_t)cmd & 0x7c0) >> 6;
-        uint16_t bitslip = ((uint32_t)cmd & 0x3f);
+        uint16_t bitslip_valid = ((uint32_t)cmd & 0x8000) >> 15;
+        uint16_t bypass_id = ((uint32_t)cmd & 0x7000) >> 12;
+        uint16_t bitslip_id = ((uint32_t)cmd & 0xf80) >> 7;
+        uint16_t bitslip = ((uint32_t)cmd & 0x7f);
 
-        //printf("cmd=%#x pattern=%#x mode=%#x bypass_id=%#x bitslip_id=%#x bitslip=%#x\n", cmd, pattern, mode, bypass_id, bitslip_id, bitslip);
+        //printf("cmd=%#x pattern=%#x bitslip_valid=%d bypass_id=%#x bitslip_id=%#x bitslip=%#x\n", cmd, pattern, bitslip_valid, bypass_id, bitslip_id, bitslip);
 
         bring_all_adc(pattern);
 
-        if (mode & 0x1) {
+        if (bitslip_valid) {
             write_gpio_field(bitslip_id, 15, 5, 0); // bitslip_id at [19:15]
-            write_gpio_field(bitslip, 4, 6, 0);     // bitslip    at [9:4]
+            write_gpio_field(bitslip, 4, 7, 0);     // bitslip    at [10:4]
         }
-        if (mode & 0x2) {
-            write_gpio_field(bypass_id, 20, 3, 0);  // bypass_id  at [22:20]
-        }
+        write_gpio_field(bypass_id, 20, 3, 0);  // bypass_id  at [22:20]
         break;
       }
       case 1: {
