@@ -53,13 +53,14 @@ void main(int hartid, void *dtb) {
          * cmd[29:16]: pattern
          * cmd[15:15]: bitslip_valid
          * cmd[14:12]: bypass_id
-         * cmd[11:7] : bitslip_id
+         * cmd[11:10]: reserved
+         * cmd[9:7]  : bitslip_id
          * cmd[6:0]  : bitslip
          */
         uint16_t pattern = ((uint32_t)cmd & 0x3fff0000) >> 16;
         uint16_t bitslip_valid = ((uint32_t)cmd & 0x8000) >> 15;
         uint16_t bypass_id = ((uint32_t)cmd & 0x7000) >> 12;
-        uint16_t bitslip_id = ((uint32_t)cmd & 0xf80) >> 7;
+        uint16_t bitslip_id = ((uint32_t)cmd & 0x380) >> 7;
         uint16_t bitslip = ((uint32_t)cmd & 0x7f);
 
         //printf("cmd=%#x pattern=%#x bitslip_valid=%d bypass_id=%#x bitslip_id=%#x bitslip=%#x\n", cmd, pattern, bitslip_valid, bypass_id, bitslip_id, bitslip);
@@ -67,10 +68,10 @@ void main(int hartid, void *dtb) {
         bring_all_adc(pattern);
 
         if (bitslip_valid) {
-            write_gpio_field(bitslip_id, 15, 5, 0); // bitslip_id at [19:15]
+            write_gpio_field(bitslip_id, 15, 3, 0); // bitslip_id at [17:15]
             write_gpio_field(bitslip, 4, 7, 0);     // bitslip    at [10:4]
         }
-        write_gpio_field(bypass_id, 20, 3, 0);  // bypass_id  at [22:20]
+        write_gpio_field(bypass_id, 18, 3, 0);  // bypass_id  at [20:18]
         break;
       }
       case 1: {
